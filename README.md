@@ -1,6 +1,6 @@
 # IMDB Clone
 ## A movie and celebrity info website.
-## Live version is at: https://django-imdb-clone.herokuapp.com/
+## Live version is at: 
 
 there are screenshots.
 
@@ -9,7 +9,7 @@ Django, Jquery, Bootstrap
 
 # Please follow the process below to install
 
-1. Clone this repository (use `git clone ...`)
+1. Clone this repository (use `git clone https://github.com/pydatageek/imdb-clone.git`)
 
 ### setting up a development environment
 2. start an environment with requirements

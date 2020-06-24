@@ -189,3 +189,6 @@ CKEDITOR_CONFIGS = {
         ]
     }
 }
+
+ALLOWED_HOSTS = ['178.62.46.203', 'fazla.net',
+                 'www.fazla.net', 'imdb.fazla.net']
