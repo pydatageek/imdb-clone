@@ -13,6 +13,8 @@ class Home(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
 
+        context['title'] = _('IMDB Clone')
+
         # movies context
         context['featured_movies'] = get_featured_movies(8)
         context['latest_movies'] = get_latest_movies(13)
