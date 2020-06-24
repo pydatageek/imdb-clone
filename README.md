@@ -1,8 +1,8 @@
 # IMDB Clone
 ## A movie and celebrity info website.
-## Live version is at: 
+## Live version is at: https://django-imdb-clone.herokuapp.com/
 
-there are screenshots.
+there are screenshots: https://github.com/pydatageek/imdb-clone/tree/master/screenshots/
 
 ## Used technology:
 Django, Jquery, Bootstrap
@@ -38,7 +38,7 @@ P.S: you may follow the process as the ordering defined or there may be problems
 
 * rest_framework is introduced to the application, needed base code is written *
 
-*** More unit tests ***
+* More unit tests are added continuously *
 
 # Other Notes:
 1. You may want to remove Google Analytics code.
