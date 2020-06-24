@@ -1,0 +1,59 @@
+{% extends 'html/lte/movies/base_list.html' %}
+{% load static i18n imagekit %}
+
+{% block title_page_prefix %}{{ title_page_prefix }}{% endblock %}
+
+{% block content %}
+<div class="card box">
+  <div class="card-header">
+    <h3 class="card-title">Code: {{ object.code }}</h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <p>{{ object.content }}</p>
+    <h3>{{ object.name }} Movies</h3>
+    <hr>
+    <table id="list" class="table table-hover dataTable display">
+      <caption>{{ object.name }} Movies</caption>
+      <thead>
+        <tr>
+          <th></th>
+          <th>{% trans 'Movie' %}</th>
+          <th>{% trans 'IMDB Rating' %}</th>
+          <th>{% trans 'Duration' %} <small>(min.)</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in movies %}
+        <tr>
+          <td>{% if item.image %}
+            {% generateimage 'ic_thumbnail' source=item.image -- alt=item.name class='img-fluid' %}
+            {% else %}
+            <img class="img-fluid" 
+              src="{% static 'no-image-thumbnail.jpg' %}" 
+              alt="{% trans 'no image' %}">
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'movie_detail' item.slug %}">
+              {{ item.name }}</a> <small><em>({{ item.release_year }})</em></small>
+          </td>
+          <td>{{ item.imdb_rating }}</td>
+          <td>{{ item.duration }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>{% trans 'Title' %} <small>({% trans 'Release Year' %})</small></th>
+          <th>{% trans 'IMDB Rating' %}</th>
+          <th>{% trans 'Duration' %} <small>(min.)</small></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+{% endblock %}

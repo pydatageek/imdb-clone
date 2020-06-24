@@ -1,0 +1,121 @@
+{% load static i18n %}
+<aside class="main-sidebar sidebar-dark-primary elevation-4"><!---sidebar-light-primary-->
+  <!-- Brand Logo -->
+  <a href="{% url 'index' %}" class="brand-link navbar-imdb-clone">
+    <img src="{% static 'html/lte/img/imdb-clone-logo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <span class="brand-text font-weight-bold primary text-midnight">IMDB Clone</span>
+  </a>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Sidebar user (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img 
+          src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'html/lte/img/user1-128x128.jpg' %}{% endif %}" 
+          class="img-circle elevation-2" alt="User Image">
+      </div>
+      <div class="info">
+        <a href="#" class="d-block">
+          {% if user.is_authenticated %}
+            {% if user.first_name or user.last_name %}
+              {{ user.first_name }} {{ user.last_name }}
+            {% else %}
+              {{ user.username }}
+            {% endif %}
+          {% else %}
+            IMDB Clone User
+          {% endif %}
+        </a>
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+             with font-awesome or any other icon font library -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link flex-display">
+            <i class="nav-icon fas fa-star"></i>
+            <p class="pl-4">
+              {% trans 'Celebrity' %}
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'celeb-list' %}" class="nav-link flex-display">
+                <i class="far fa-circle nav-icon"></i>
+                <p class="pl-4">{% trans 'Celebrities' %}</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link flex-display">
+            <i class="nav-icon fas fa-film"></i>
+            <p class="pl-4">
+              {% trans 'Movie' %}
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'movie_list' %}" class="nav-link flex-display">
+                <i class="far fa-circle nav-icon"></i>
+                <p class="pl-4">{% trans 'Movies' %}</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'top-movies' %}" class="nav-link flex-display">
+                <i class="far fa-circle nav-icon"></i>
+                <p class="pl-4">{% trans 'Top Movies' %}</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link flex-display">
+            <i class="nav-icon fas fa-table"></i>
+            <p class="pl-4">
+              {% trans 'Information' %}
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'genre_list' %}" class="nav-link flex-display">
+                <i class="far fa-circle nav-icon"></i>
+                <p class="pl-4">{% trans 'Genre' %}</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'pg_rating_list' %}" class="nav-link flex-display">
+                <i class="far fa-circle nav-icon"></i>
+                <p class="pl-4">{% trans 'PG Rating' %}</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'duty_list' %}" class="nav-link flex-display">
+                <i class="far fa-circle nav-icon"></i>
+                <p class="pl-4">{% trans 'Duty' %}</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item has-treeview">
+          <a href="https://github.com/pydatageek/imdb-clone" 
+            class="nav-link flex-display" target="_blank">
+            <i class="nav-icon ic-color fab fa-github"></i>
+            <p class="pl-4">
+              {% trans 'Code on Github' %}
+            </p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

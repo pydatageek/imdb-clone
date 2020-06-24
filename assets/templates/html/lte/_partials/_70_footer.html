@@ -1,0 +1,13 @@
+{% load i18n %}
+<!-- IMDB Clone is an open-source project. 
+  You can change footer copyright info -->
+<footer class="main-footer text-sm">
+  <div class="float-right d-none d-sm-block">
+    <b>{% trans 'Version' %}</b> 0.1.0
+  </div>
+  <strong>
+    {% trans 'Copyright' %} &copy; {% now 'Y' %} 
+    <a href="https://github.com/pydatageek/imdb-clone" target="_blank">
+      IMDB Clone</a>.
+  </strong> {% trans 'Public Domain (This project is open source)' %}.
+</footer>

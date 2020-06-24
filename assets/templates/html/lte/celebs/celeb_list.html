@@ -1,0 +1,74 @@
+{% extends 'html/lte/celebs/base_list.html' %}
+{% load static i18n imagekit %}
+
+{% block content %}
+<div class="card box">
+  <div class="card-header">
+    <h3 class="card-title"></h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <p>{{ object.content }}</p>
+    <h3>{{ title }} List</h3>
+    <hr>
+    <table id="list" class="table table-hover dataTable display">
+        <caption>{{ title }} List</caption>
+        <thead>
+          <tr>
+            <th></th>
+            <th>{% trans 'First Name' %}</th>
+            <th>{% trans 'Last Name' %}</th>
+            <th>{% trans 'Age' %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in object_list %}
+          <tr>
+            <td>{% if item.image %}
+              {% generateimage 'ic_thumbnail' source=item.image -- alt=item.name class='img-fluid' %}
+              {% else %}
+              <img class="img-fluid" 
+                src="{% static 'no-image-thumbnail.jpg' %}" 
+                alt="{% trans 'no image' %}">
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'celeb-detail' item.slug %}">
+                {{ item.first_name }}</a></td>
+            <td><a href="{% url 'celeb-detail' item.slug %}">
+              {{ item.last_name }}</a></td>
+            <td>{{ item.age }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th>{% trans 'First Name' %}</th>
+            <th>{% trans 'Last Name' %}</th>
+            <th>{% trans 'Age' %}</th>
+          </tr>
+        </tfoot>
+      </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+{% endblock %}
+
+{% block extra_script %}
+<script>
+  $(function () {
+    $('#list').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "order": [[2, 'asc']],
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
+{% endblock %}

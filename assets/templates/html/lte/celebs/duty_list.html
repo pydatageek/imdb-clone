@@ -1,0 +1,44 @@
+{% extends 'html/lte/celebs/base_list.html' %}
+{% load static i18n %}
+
+{% block content %}
+<div class="card box">
+  <div class="card-header">
+    <h3 class="card-title">{{ description }}</h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <p>{{ object.content }}</p>
+    <h3>{{ title }} List</h3>
+    <hr>
+    <table id="list" class="table table-hover dataTable display">
+      <caption>{{ title }} List</caption>
+      <thead>
+        <tr>
+          <th>{% trans 'Name' %}</th>
+          <th>{% trans 'Code' %}</th>
+          <th>{% trans '# Celebs' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in object_list %}
+        <tr>
+          <td><a href="{% url 'duty_detail' item.slug %}">{{ item.name }}</a></td>
+          <td>{{ item.code }}</td>
+          <td>{{ item.celebs_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>{% trans 'Name' %}</th>
+          <th>{% trans 'Code' %}</th>
+          <th>{% trans '# Celebs' %}</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+{% endblock %}

@@ -1,0 +1,47 @@
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<head>
+
+  {% block meta %}
+    <meta http-equiv="content-language" content="{{ LANGUAGE_CODE|default:'en-us' }}" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge" />
+    <meta name="author" content="github.com @pydatageek" />
+    <meta name="reply-to" content="@pydatageek" />
+    <meta name="Copyright" content="All rights reserved." />
+    <meta name="creator" content="https://github.com/pydatageek/" />
+    <meta name="publisher" content="github.com @pydatageek" />
+    <meta name="description" content="{% block meta_description %}{% endblock %}" />
+    
+    <meta name="robots" content="all" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {% endblock %}
+
+	<link rel="canonical" href="{{ request.site.root_url }}{{ request.path }}"/>
+	
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet" href="{% static 'html/lte/plugins/fontawesome-free/css/all.min.css' %}">
+  {% block extra_plugin_style %}{% endblock %}
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'html/lte/css/adminlte.min.css' %}">
+  <!-- Dark skin -->
+  <link rel="stylesheet" href="{% static 'html/lte/css/skins/skin-midnight.min.css' %}">
+  <!-- Site specific style -->
+  <link rel="stylesheet" href="{% static 'html/lte/css/site.css' %}">
+  {% block extra_style %}{% endblock %}
+  {% block extra_head %}{% endblock %}
+
+  <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}" />
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+
+  {% block title_outer %}
+    <title>
+      {% block title %}{{ title }}{% endblock %}
+      {% block title_suffix %}{{ site.name }}{% endblock %}
+    </title>
+  {% endblock %}
+
+</head>
+
+

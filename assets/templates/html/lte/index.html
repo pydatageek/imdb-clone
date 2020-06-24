@@ -1,0 +1,171 @@
+{% extends 'html/lte/base.html' %}
+{% load static i18n imagekit variabletags %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-9">
+    <div class="card box">
+      <div class="card-body">
+        <div id="carouselExampleIndicators" class="carousel slide" 
+            data-ride="carousel" data-interval="3000">
+          <div class="carousel-inner img-gradient">
+          {% for movie in featured_movies %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              {% if movie.image %}
+                {% generateimage 'ic_featured' source=movie.image -- alt=movie.name class='img-fluid' width='100%' %}
+                <a href="{% url 'movie_detail' movie.slug %}">
+                  <div class="absolute-img">
+                    {% generateimage 'ic_middle_poster' source=movie.image -- alt=movie.name %}
+                  </div>
+                </a>
+              {% else %}
+                <img class="img-fluid" width="100%" 
+                  src="{% static 'no-video.jpg' %}" 
+                  alt="{% trans 'no video' %}">
+                <a href="{% url 'movie_detail' movie.slug %}">
+                  <div class="absolute-img">
+                    <img src="{% static 'no-image-middle-poster.jpg' %}" 
+                      alt="{% trans 'no image' %}">
+                  </div>
+                </a>
+              {% endif %}
+              <a href="{% url 'movie_detail' movie.slug %}">
+                <div class="featured-title">
+                  <h2>{{ movie.name }} 
+                    <small><i>({{ movie.release_year }})</i></small>
+                  </h2>
+                  {% if movie.pg_rating.code %}
+                  <span class="pr-1">
+                    {{ movie.pg_rating.code }}</span> | {% endif %}
+                  <span class="pl-1 pr-1">
+                    {{ movie.duration_humanize }}</span> | 
+                  <span class="pl-1 pr-1">{% for genre in movie.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %},{% endif %} 
+                    {% endfor %}
+                  </span>
+                  <span>
+                    <p class="ic-color">
+                      <i class="fa fa-star"></i> {{ movie.imdb_rating }}/10</p>
+                  </span>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+          </div>
+          <a class="carousel-control-prev" href="#carouselExampleIndicators" 
+              role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">{% trans 'Previous' %}</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExampleIndicators" 
+              role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">{% trans 'Next' %}</span>
+          </a>
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+  </div>
+  <!-- /.card -->
+
+  <div class="col-lg-3">
+    <div class="card right-side">
+      <div class="card-header">
+        <h3 class="card-title ic-color">
+          {% trans 'Celebrities' %}</h3>
+      </div>
+        {% for celeb in featured_celebs|slice:':3' %}
+        <div class="card-body">
+          <div class="col-sm-3 float-left">
+            <a href="{% url 'celeb-detail' celeb.slug %}">
+            {% if celeb.image %}
+              {% generateimage 'ic_list_thumbnail' source=celeb.image -- alt=celeb.name class='w-80' %}
+            {% else %}
+            <img class="img-fluid w-100"
+              src="{% static 'no-image-list-thumbnail.jpg' %}" 
+              alt="{% trans 'no image' %}">
+            {% endif %}
+            </a>
+          </div>
+          <div class="col-sm-9 float-left">
+            <h5>
+              <a href="{% url 'celeb-detail' celeb.slug %}">
+                {{ celeb.name }}</a></h5>
+            <p class="small">{{ celeb.moviecrews.first.movie }}</p>
+          </div>
+        </div>
+        {% endfor %}
+        <!-- /.card-body -->
+      <div class="card-footer">
+        <a href="{% url 'celeb-list' %}">
+          {% trans 'Browse Celebs' %}
+          <i class="right fas fa-angle-right"></i></a>
+      </div>
+      <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+    <!-- right box -->
+  </div>
+</div>
+<section id="multi-item-carousel">
+  <section class="section-preview">
+    <div id="multi-item" 
+        class="carousel slide carousel-multi-item" data-ride="carousel">
+
+      <!--Controls-->
+      <!-- TODO: the most left & right items cannot be 
+        clicked due to prev and next buttons -->
+      <div class="controls-top">
+        <a class="carousel-control-prev" href="#multi-item" 
+            role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">{% trans 'Previous' %}</span>
+        </a>
+        <a class="carousel-control-next" href="#multi-item" 
+            role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">{% trans 'Next' %}</span>
+        </a>
+      </div>
+      <!--/.Controls-->
+
+      <div class="carousel-inner" role="listbox">
+      {% for movie in latest_movies %}
+        {% if forloop.first %}
+        <div class="carousel-item active">
+        {% endif %}
+        {% if forloop.counter|loopnumequal_1:6 %}
+        <!--/.Nth slide-->
+        <div class="carousel-item">
+        {% endif %}
+          <div class="col-md-2 float-left">
+            <div class="card mb-2 bg-dark">
+              <a href="{% url 'movie_detail' movie.slug %}">
+                {% if movie.image %}
+                  {% generateimage 'ic_poster' source=movie.image -- alt=movie.name class='card-img-top' width='80%' %}
+                {% else %}
+                  <img src="{% static 'no-image-poster.jpg' %}" 
+                    class="card-img-top" alt="{% trans 'no image' %}">
+                {% endif %}
+                <div class="card-body">
+                  <h4 class="card-title ic-color">{{ movie.name }}</h4>
+                </div>
+              </a>
+            </div>
+          </div>
+        {% if forloop.counter|loopnumequal_1:11 %}
+        </div>
+        <!--/.Nth slide-->
+        {% endif %}
+        {% if forloop.counter|loopnumequal:6 %}
+        </div>
+        <!--/.Nth slide-->
+        {% endif %}
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+</section>
+
+{% endblock %}

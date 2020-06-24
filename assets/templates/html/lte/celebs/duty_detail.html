@@ -1,0 +1,57 @@
+{% extends 'html/lte/celebs/base_list.html' %}
+{% load static i18n imagekit %}
+
+{% block title_page_prefix %}{{ title_page_prefix }}{% endblock %}
+
+{% block content %}
+<div class="card box">
+  <div class="card-header">
+    <h3 class="card-title">Code: {{ object.code }}</h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <p>{{ object.content }}</p>
+    <h3>{{ object.name }} Celebrities</h3>
+    <hr>
+    <table id="list" class="table table-hover dataTable display">
+      <caption>Celebrities as {{ object.name }}</caption>
+      <thead>
+        <tr>
+          <th></th>
+          <th>{% trans 'First Name' %}</th>
+          <th>{% trans 'Last Name' %}</th>
+          <th>{% trans 'Age' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in celebs %}
+        <tr>
+          <td>{% if item.image %}
+            {% generateimage 'ic_thumbnail' source=item.image -- alt=item.name class='img-fluid' %}
+            {% else %}
+            <img class="img-fluid" 
+              src="{% static 'no-image-thumbnail.jpg' %}" 
+              alt="{% trans 'no image' %}">
+            {% endif %}
+          </td>
+          <td><a href="{% url 'celeb-detail' item.slug %}">
+            {{ item.first_name }}</a></td>
+          <td><a href="{% url 'celeb-detail' item.slug %}">
+            {{ item.last_name }}</a></td>
+          <td>{{ item.age }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>{% trans 'First Name' %}</th>
+          <th>{% trans 'Last Name' %}</th>
+          <th>{% trans 'Age' %}</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+{% endblock %}

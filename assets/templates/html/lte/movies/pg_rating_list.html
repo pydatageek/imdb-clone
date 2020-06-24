@@ -1,0 +1,71 @@
+{% extends 'html/lte/movies/base_list.html' %}
+{% load static i18n %}
+
+{% block content %}
+<div class="card box">
+  <div class="card-header">
+    <h3 class="card-title">{{ description }}</h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <table id="list" class="table table-hover dataTable display">
+      <thead>
+        <tr>
+          <th></th>
+          <th>{% trans 'Name' %}</th>
+          <th>{% trans 'Code' %}</th>
+          <th>{% trans '# Movies' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for item in object_list %}
+        <tr data-child-value="{{ item.content }}">
+          <td class="details-control"></td>
+          <td>
+            <a href="{% url 'pg-rating-detail' item.slug %}">{{ item.name }}</a>
+          </td>
+          <td>{{ item.code }}</td>
+          <td>{{ item.movies_count }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>{% trans 'Name' %}</th>
+          <th>{% trans 'Code' %}</th>
+          <th>{% trans '# Movies' %}</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+{% endblock %}
+{% block extra_script %}
+<script>
+  function format(value) {
+    return '<div>' + value + '</div>';
+  }
+  $(document).ready(function () {
+      var table = $('#list').DataTable({});
+
+      // Add event listener for opening and closing details
+      $('#list').on('click', 'td.details-control', function () {
+          var tr = $(this).closest('tr');
+          var row = table.row(tr);
+
+          if (row.child.isShown()) {
+              // This row is already open - close it
+              row.child.hide();
+              tr.removeClass('shown');
+          } else {
+              // Open this row
+              row.child(format(tr.data('child-value'))).show();
+              tr.addClass('shown');
+          }
+      });
+  });
+</script>
+{% endblock %}

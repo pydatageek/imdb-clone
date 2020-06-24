@@ -1,0 +1,131 @@
+{% extends 'html/lte/movies/base.html' %}
+{% load static i18n imagekit %}
+
+{% block title_page_suffix %}({{ object.release_year }}){% endblock %}
+{% block title_info %}
+  <small>
+    {% if movie.imdb_rating %}
+      <span class="pl-1 pr-1 ic-bg-dark" title="{% trans 'IMDB Rating' %}">
+        <i class="fa fa-star"></i> {{ movie.imdb_rating }}/10
+      </span>
+    {% endif %}
+    {% if movie.pg_rating.code %}
+      <span class="pr-1" title="{% trans 'PG Rating' %}">
+        {{ movie.pg_rating.code }}</span> | {% endif %}
+      <span class="pl-1 pr-1" title="{% trans 'Movie Duration' %}">
+        {{ object.duration_humanize }}</span> | 
+      <span class="pl-1 pr-1" title="{% trans 'Movie Genres' %}">
+        {% for genre in object.genres.all %}
+      <a href="{% url 'genre_detail' genre.slug %}" alt="{{ genre.name }}">
+        {{ genre.name }}</a>{% if not forloop.last %},{% endif %} 
+        {% endfor %}
+    </span>
+  </small>
+{% endblock %}
+
+{% block content %}
+<div class="card box">
+  <div class="card-header">
+    <h3 class="card-title">{{ object.code }}</h3>
+    <figure class="poster row no-gutters">    
+      <div class="col-md-3">
+        {% if object.image %}
+          {% generateimage 'ic_poster' source=object.image -- alt=object.name class='img-fluid' width='100%' %}
+        {% else %}
+          <img class="img-fluid" 
+            width="100%" 
+            src="{% static 'no-image-poster.jpg' %}" 
+            alt="{% trans 'no image' %}">
+        {% endif %}
+      </div>
+      <div class="col-md-9 embed-responsive">
+        {% if object.trailer and object.trailer_video != 'no-video' %}
+        <iframe width="100%" height="100%" 
+          src="{{ object.trailer_video.0 }}" 
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+          frameborder="0" allowfullscreen>
+        </iframe>
+        {% else%}
+        <img class="img-fluid" width="100%" 
+          src="{% static 'no-video.jpg' %}" alt="{% trans 'no video' %}">
+        {% endif %}          
+      </div>
+      <div class="col-md-12">
+        <figcaption>
+          <strong>{{ object.name }}</strong> <br>
+          {% if object.image_credit %}
+            (image credit: {{ object.image_credit }})<br>{% endif %}
+          {% if object.trailer_info %}
+            (about video: {{ object.trailer_info }}){% endif %}
+        </figcaption>
+      </div>
+    </figure>
+    <p>
+      <strong>Directors: </strong>
+      {% for i in object.directors.all %}
+      <a href="{% url 'celeb-detail' i.crew.slug %}" alt="{{ i.crew.name }}">
+        {{ i.crew.name }}</a>{% if not forloop.last %},{% endif %} 
+      {% endfor %}
+    <br>
+      <strong>Writers: </strong>
+      {% for i in object.writers.all %}
+      <a href="{% url 'celeb-detail' i.crew.slug %}" alt="{{ i.crew.name }}">
+        {{ i.crew.name }}</a>{% if not forloop.last %},{% endif %} 
+      {% endfor %}
+    <br>
+      <strong>Stars: </strong>
+      {% for i in object.casts.all|slice:':5' %}
+      <a href="{% url 'celeb-detail' i.crew.slug %}" alt="{{ i.crew.name }}">
+        {{ i.crew.name }}</a>{% if not forloop.last %},{% endif %} 
+      {% endfor %} | 
+      <a href="#cast">{% trans 'Full Cast & Crew List' %}</a> 
+      <i class="right fas fa-angle-double-right"></i>
+    </p>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    {% if object.content %}
+    <div class="module">
+      <div class="collapse" id="detail" aria-expanded="false">
+        <div>
+          <kbd>{% trans 'Spoiler' %}:</kbd> {{ object.content|safe }}
+        </div>
+      </div>
+      <a role="button" class="collapsed" data-toggle="collapse" 
+        href="#detail" aria-expanded="false" 
+        aria-controls="detail"></a>
+    </div>
+    <small>
+      <kbd>{% trans 'Content source' %}:</kbd> 
+      <a href="{{ object.content_source }}" target="_blank">
+        {{ object.content_source }}</a>
+    </small>
+    {% endif %}
+    <hr>
+    <a name="cast"></a>
+    <h2>Cast & Crew</h2>
+    <table>
+      <tbody>
+        <!-- TODO: make this part DRY-->
+        {% for i in object.all_crews.all %}
+        <tr>
+          <td>
+            <a href="{% url 'celeb-detail' i.crew.slug %}" 
+              alt="{{ i.crew.name }}">{{ i.crew.name }}</a> 
+            ...
+            <span class="font-italic">{{ i.duty.name }}</span>
+            {% if i.role %}
+              <span class="font-italic">({{ i.role }})</span>{% endif %}
+            {% if i.screen_name %}
+              as <span class="font-italic">{{ i.screen_name }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+{% endblock %}
