@@ -3,15 +3,26 @@ models related with Celebrities
 e.g. Celeb, Duty
 """
 
+from datetime import date
+
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Count
 from django.urls import reverse
+from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from ckeditor.fields import RichTextField
 
-from core.helpers import get_age, get_extension, random_chars, video_code
 from core.models import NameSlugStampedModel
+from core.helpers import get_age, get_extension, random_chars, video_code
+"""
+# TODO: this part is for fast search with postgreSQL.search
+
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
+"""
 
 
 def celeb_directory_path(instance, filename):
@@ -39,14 +50,15 @@ class Duty(NameSlugStampedModel):
         ordering = ('code',)
 
     def get_absolute_url(self):
-        return reverse('duty_detail', args=[self.slug])
+        return reverse('duty-detail', args=[self.slug])
 
 
 class Celebrity(NameSlugStampedModel):
-    """Celebrity model"""
+    """Celebrity model
+    TODO: birthdate <= today, deathdate <= today and birthdate < deathdate checks"""
     # name field is overriden
     name = models.CharField(
-        _('full name'), max_length=245, unique=False,
+        _('full name'), max_length=245, unique=False, db_index=True,
         blank=True, editable=False, help_text=_('computed full name'))
 
     first_name = models.CharField(
@@ -59,6 +71,8 @@ class Celebrity(NameSlugStampedModel):
     is_featured = models.BooleanField(
         _('featured'), default=False)
 
+    imdb_link = models.URLField(
+        _('IMDB URL'), default='', blank=True)
     # TODO
     # starmeter_rating = models.FloatField(
     #     _('StarMeter rating'), default=0, blank=True,
@@ -98,11 +112,18 @@ class Celebrity(NameSlugStampedModel):
         related_name='celebs', verbose_name=_('duties'),
         help_text=_("Celebrities' duties in movies"))
 
-    @property
+    """
+    # TODO: this part is for fast search with postgreSQL.search
+
+    first_name_vector = SearchVectorField(null=True)
+    last_name_vector = SearchVectorField(null=True)
+    """
+
+    @cached_property
     def age(self):
         return get_age(self.birthdate, self.deathdate)
 
-    @property
+    @cached_property
     def trailer_video(self):
         return video_code(self.trailer)
 
@@ -125,7 +146,16 @@ class Celebrity(NameSlugStampedModel):
     class Meta:
         verbose_name = _('celebrity')
         verbose_name_plural = _('celebrities')
-        ordering = ('last_name', 'first_name')
+        # ordering = ('last_name', 'first_name')
+
+        """
+        # TODO: this part is for fast search with postgreSQL.search
+
+        indexes = [GinIndex(fields=[
+            'first_name_vector',
+            'last_name_vector',
+        ])]
+        """
 
     def __str__(self):
         return self.name

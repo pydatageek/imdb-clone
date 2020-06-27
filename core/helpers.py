@@ -7,7 +7,9 @@ import string
 from datetime import date, datetime
 
 from django.db import models
+from django.core.validators import ValidationError
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 def get_age(birth_date, death_date=None):
@@ -42,7 +44,9 @@ def get_extension(filename):
 
 def random_chars(counts):
     """generates 'counts' number random chars consisting of letters 
-    and numbers"""
+    and numbers.
+    TODO: a higher performance way?
+    """
     return ''.join(['{}'.format(
         random.choice(string.ascii_lowercase + string.digits))
         for _ in range(counts)])

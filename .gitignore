@@ -2,6 +2,16 @@
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
 
+
+### Custom ###
+tests/
+core_projects/settings/
+assets/templates/html/lte/base-admin.html
+assets/templates/html/lte/_partials/OLD_01_head.html
+assets/templates/html/lte/_partials/OLD_30_header.html
+assets/templates/html/lte/_partials/OLD_90_scripts.html
+geckodriver.log
+
 ### Django ###
 *.log
 *.pot

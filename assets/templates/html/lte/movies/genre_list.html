@@ -20,7 +20,7 @@
       {% for item in object_list %}
         <tr>
           <td>
-            <a href="{% url 'genre_detail' item.slug %}">{{ item.name }}</a>
+            <a href="{% url 'genre-detail' item.slug %}">{{ item.name }}</a>
           </td>
           <td>{{ item.code }}</td>
           <td>{{ item.movies_count }}</td>

@@ -1,0 +1,224 @@
+{% load i18n static imagekit %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:'en-us' }}" 
+      {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+
+  <head>
+
+    {% block meta %}
+      <meta http-equiv="content-language" 
+            content="{{ LANGUAGE_CODE|default:'en-us' }}" />
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge" />
+      <meta name="author" content="github.com @pydatageek" />
+      <meta name="reply-to" content="@pydatageek" />
+      <meta name="Copyright" content="All rights reserved." />
+      <meta name="creator" content="https://github.com/pydatageek/" />
+      <meta name="publisher" content="github.com @pydatageek" />
+      <meta name="description" 
+            content="{% block meta_description %}{% endblock %}" />
+      
+      <meta name="robots" content="all" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% endblock %}
+  
+    <link rel="canonical" href="{{ request.site.root_url }}{{ request.path }}"/>
+    
+    <link rel="stylesheet" 
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" 
+          href="{% static 'html/lte/plugins/fontawesome-free/css/all.min.css' %}">
+    {% block extra_plugin_style %}{% endblock %}
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'html/lte/css/adminlte.min.css' %}">
+    <!-- Dark skin -->
+    <link rel="stylesheet" 
+          href="{% static 'html/lte/css/skins/skin-midnight.min.css' %}">
+    <!-- Site specific style -->
+    <link rel="stylesheet" href="{% static 'html/lte/css/site.css' %}">
+    {% block extra_style %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+  
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}" />
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" />
+  
+    {% block title_outer %}
+      <title>
+        {% block title %}{{ title }}{% endblock %}
+        {% block title_suffix %}{{ site.name }}{% endblock %}
+      </title>
+    {% endblock %}
+  
+  </head>
+
+  {% load i18n %}
+  <body 
+    class="sidebar-mini sidebar-collapse 
+      sidebar-closed layout-fixed skin-midnight">
+  <!-- Site wrapper -->
+    <div class="wrapper">
+      <!-- Navbar -->
+      {% include 'html/lte/_partials/_10_nav.html' %}
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      {% include 'html/lte/_partials/_20_aside.html' %}
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper {% if request.path == '/' %}home-wrapper{% endif %}">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-12">
+                <h1>{% if title_page_prefix %}
+                  <small><i>
+                    {% block title_page_prefix %}{% endblock %}: 
+                  </i></small>
+                  {% endif %}
+                  {% block title_page %}{{ title }} {% endblock %}
+                  <small>{% block title_page_suffix %}
+                    {% if object.code %}
+                      ({{ object.code }})
+                    {% endif %}{% endblock %}
+                  </small>
+                </h1>
+                <div>
+                  {% block title_info %}{% endblock %}
+                </div>
+              </div>
+            </div>
+          </div><!-- /.container-fluid -->
+        </section>
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="{% if request.path != '/' %}col-lg-9{% else %}col-lg-12{% endif %}">
+                {% if request.path != '/' %}
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="{% url 'index' %}" 
+                        class="text-midnight" title="{% trans 'Base' %}">
+                        {% trans 'Home' %}</a>
+                    </li>
+                    {% block crumbs %}
+                      {% if title %} 
+                        <li class="breadcrumb-item active">{{ title }}</li>
+                      {% endif %}
+                    {% endblock %}
+                  </ol>
+                </nav>
+                {% endif %}
+                {% block content %}
+                {% endblock %}
+              </div>
+              <!-- Default content -->
+              
+              {% if request.path != '/' %}
+              <div class="col-lg-3">
+                <div class="card right-side">
+                  <div class="card-header">
+                    <h3 class="card-title ic-color">
+                      {% trans 'Celebrities' %}
+                    </h3>
+                  </div>
+                    {% for celeb in random_celebs|slice:':4' %}
+                    <div class="card-body">
+                      <div class="col-3 float-left">
+                        <a href="{% url 'celeb-detail' celeb.slug %}">
+                        {% if celeb.image %}
+                          {% generateimage 'ic_list_thumbnail' source=celeb.image -- alt=celeb.name class='img-fluid w-100' %}
+                        {% else %}
+                        <img class="img-fluid w-100"
+                          src="{% static 'no-image-list-thumbnail.jpg' %}" 
+                          alt="{% trans 'no image' %}">
+                        {% endif %}
+                        </a>
+                      </div>
+                      <div class="col-9 float-left">
+                        <h5>
+                          <a href="{% url 'celeb-detail' celeb.slug %}">
+                            {{ celeb.name }}</a></h5>
+                        <p class="small">{{ celeb.moviecrews.first.movie }}</p>
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <!-- /.card-body -->
+                  <div class="card-footer">
+                    <a href="{% url 'celeb-list' %}">
+                      {% trans 'Browse Celebs' %}
+                      <i class="right fas fa-angle-right"></i></a>
+                  </div>
+                  <!-- /.card-footer-->
+                </div>
+                <!-- /.card -->
+                <div class="card right-side">
+                  <div class="card-header">
+                    <h3 class="card-title ic-color">
+                      {% trans 'Movies' %}</h3>
+                  </div>
+                    {% for movie in random_movies|slice:':4' %}
+                    <div class="card-body">
+                      <div class="col-3 float-left">
+                        <a href="{% url 'movie-detail' movie.slug %}">
+                        {% if movie.image %}
+                          {% generateimage 'ic_list_thumbnail' source=movie.image -- alt=movie.name class='img-fluid w-100' %}
+                        {% else %}
+                        <img class="img-fluid w-100"
+                          src="{% static 'no-image-list-thumbnail.jpg' %}" 
+                          alt="{% trans 'no image' %}">
+                        {% endif %}
+                        </a>
+                      </div>
+                      <div class="col-9 float-left">
+                        <h5>
+                          <a href="{% url 'movie-detail' movie.slug %}">
+                            {{ movie.name }}</a></h5>
+                        <p class="small">{{ movie.moviecrews.first.celeb }}</p>
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <!-- /.card-body -->
+                  <div class="card-footer">
+                    <a href="{% url 'movie-list' %}">
+                      {% trans 'Browse Movies' %}
+                      <i class="right fas fa-angle-right"></i></a>
+                  </div>
+                  <!-- /.card-footer-->
+                </div>
+                <!-- /.card -->                
+                <!-- right box -->
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      {% include 'html/lte/_partials/_70_footer.html' %}
+
+      <!-- Control Sidebar -->
+      {% include 'html/lte/_partials/_80_control_sidebar.html' %}
+      <!-- /.control-sidebar -->
+    </div>
+  <!-- ./wrapper -->
+
+  <script src="{% static 'html/lte/plugins/jquery/jquery.min.js' %}"></script>
+  <script 
+    src="{% static 'html/lte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}">
+  </script>
+  {% block extra_plugin_script %}{% endblock %}
+  <script src="{% static 'html/lte/js/adminlte.min.js' %}"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="{% static 'html/lte/js/demo.js' %}"></script>
+  {% block extra_script %}{% endblock %}
+  {% include 'html/lte/_partials/_91_ga.html' %}
+  </body>
+</html>

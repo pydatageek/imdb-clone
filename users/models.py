@@ -16,7 +16,8 @@ def user_directory_path(instance, filename):
 
 class User(AbstractUser):
     """Custom User Model inherited from Django's Abstract User model"""
-    email = models.EmailField(_('email address'))  # email is required
+    email = models.EmailField(
+        _('email address'), unique=True)  # email is required
 
     image = models.ImageField(
         _('avatar'), upload_to=user_directory_path,

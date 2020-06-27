@@ -41,6 +41,7 @@ class CelebrityAdmin(BaseAdmin, ImportExportModelAdmin):
     list_filter = ('duties',)
     search_fields = ('first_name', 'last_name', 'duties__name')
 
+    ordering = ('last_name', 'first_name')
     list_display = (
         'admin_thumbnail', 'first_name', 'last_name', 'is_featured', 'slug',
         'age', 'updated_at')
@@ -56,10 +57,11 @@ class CelebrityAdmin(BaseAdmin, ImportExportModelAdmin):
             'fields': (
                 ('name', 'slug'), ('first_name', 'last_name'),
                 ('nick_name', 'is_featured'),
-                ('birthdate', 'birth_place'), 'content', 'content_source',
+                ('birthdate', 'birth_place'), ('deathdate', 'death_place'),
+                'content', 'content_source',
                 'trailer', 'trailer_info',
                 ('admin_thumbnail', 'image'), 'image_credit',
-                'duties',
+                'duties', 'imdb_link',
             )
         }),
         (_('Meta info'), {

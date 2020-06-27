@@ -27,7 +27,8 @@ SECRET_KEY = 'qa*nk7k99hk0b)71hiwe0xxcn0#(v*(5-)92_*_rcn=yk3xtfn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# you should change this setting while deployment
+ALLOWED_HOSTS = ['django-imdb-clone.herokuapp.com', 'localhost', '.localhost']
 
 
 # Application definition
@@ -96,7 +97,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
+    }
 }
 
 

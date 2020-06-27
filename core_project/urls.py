@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from core.views import Home
+from core.views import Home, Search
 
 html_dir = 'html/lte/'
 jq_dir = 'jq/'
@@ -26,6 +26,9 @@ urlpatterns = [
     path('', include([
         path('celeb/', include('celebs.urls_html')),
         path('movie/', include('movies.urls_html')),
+        path(
+            'search/', Search.as_view(template_name=html_dir + 'search.html'),
+            name='search'),
         path(
             '', Home.as_view(template_name=html_dir + 'index.html'),
             name='index')

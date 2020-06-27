@@ -1,0 +1,120 @@
+{% extends 'html/lte/base.html' %}
+{% load static i18n imagekit %}
+
+{% block content %}
+<div class="card box">
+  <div class="card-header">
+    <p>Search terms: <strong>{{ q }}</strong></p>
+  </div>
+</div>
+
+<div class="card box">
+  <div class="card-body">
+    {% if duties %}
+      <p>
+        <strong>Celebrity Duties:</strong>
+        {% for duty in duties %}
+          <a href="{% url 'duty-detail' duty.slug %}">
+            {{ duty.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+    {% endif %}
+
+    {% if genres %}
+      <p>
+        <strong>Genres:</strong>
+        {% for genre in genres %}
+          <a href="{% url 'genre-detail' genre.slug %}">
+            {{ genre.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+    {% endif %}
+
+    {% if pg_ratings %}
+      <p>
+        <strong>Pg Ratings:</strong>
+        {% for pg_rating in pg_ratings %}
+          <a href="{% url 'pg-rating-detail' pg_rating.slug %}">
+            {{ pg_rating.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+    {% endif %}
+
+    <div class="col-sm-6 float-left">
+      <p>{{ object.content }}</p>
+      <h3>Results from <strong>{{ movies_title }}</strong></h3>
+      <hr>
+      <table id="movies_list" class="table table-hover dataTable display">
+        <caption>{{ movies_title }} List</caption>
+        <thead>
+          <tr>
+            <th></th>
+            <th>{% trans 'Movie' %}</th>
+            <th>{% trans 'IMDB' %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in movies %}
+          <tr>
+            <td>{% if item.image %}
+              {% generateimage 'ic_thumbnail' source=item.image -- alt=item.name class='img-fluid' %}
+              {% else %}
+              <img class="img-fluid" 
+                src="{% static 'no-image-thumbnail.jpg' %}" 
+                alt="{% trans 'no image' %}">
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'movie-detail' item.slug %}">
+                {{ item.name }}</a> 
+                <small><em>({{ item.release_year }})</em></small>
+            </td>
+            <td>{{ item.imdb_rating }}</td>
+          </tr>
+          {% empty %}
+          <tr><td>{% trans 'There is no result!' %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-sm-6 float-left">
+      <p>{{ object.content }}</p>
+      <h3>Results from <strong>{{ celebs_title }}</strong></h3>
+      <hr>
+      <table id="celebs_list" class="table table-hover dataTable display">
+          <caption>{{ celebs_title }} List</caption>
+          <thead>
+            <tr>
+              <th></th>
+              <th>{% trans 'Celebrity' %}</th>
+              <th>{% trans 'Age' %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in celebs %}
+            <tr>
+              <td>{% if item.image %}
+                {% generateimage 'ic_thumbnail' source=item.image -- alt=item.name class='img-fluid' %}
+                {% else %}
+                <img class="img-fluid" 
+                  src="{% static 'no-image-thumbnail.jpg' %}" 
+                  alt="{% trans 'no image' %}">
+                {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'celeb-detail' item.slug %}">
+                  {{ item.name }}</a></td>
+                  <td>{{ item.age }}</td>
+            </tr>
+            {% empty %}
+            <tr><td>{% trans 'There is no result!' %}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+{% endblock %}

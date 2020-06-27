@@ -24,15 +24,15 @@
         {% for item in movie_list %}
         <tr>
           <td>{% if item.image %}
-            {% generateimage 'ic_thumbnail' source=item.image -- alt=item.name class='img-fluid' %}
+            {% generateimage 'ic_thumbnail' source=item.image -- alt=item.name class='img-fluid w-100' %}
             {% else %}
-            <img class="img-fluid" 
+            <img class="img-fluid w-100" 
               src="{% static 'no-image-thumbnail.jpg' %}" 
               alt="{% trans 'no image' %}">
             {% endif %}
           </td>
           <td>
-            <a href="{% url 'movie_detail' item.slug %}">
+            <a href="{% url 'movie-detail' item.slug %}">
               {{ item.name }}</a> 
               <small><em>({{ item.release_year }})</em></small>
           </td>

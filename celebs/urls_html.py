@@ -8,10 +8,10 @@ urlpatterns = [
     path('duty', include([
         path('<slug:slug>/', DutyDetail.as_view(
             template_name=base_dir + 'celebs/duty_detail.html'
-        ), name='duty_detail'),
+        ), name='duty-detail'),
         path('', DutyList.as_view(
             template_name=base_dir + 'celebs/duty_list.html'
-        ), name='duty_list')
+        ), name='duty-list')
     ])),
     path('', include([
         path('<slug:slug>/', CelebDetail.as_view(

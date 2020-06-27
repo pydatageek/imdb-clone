@@ -14,6 +14,9 @@ body {
     background-color: #121112;
     border: 0;
 }
+.skin-midnight .box-solid, .skin-midnight .box {
+    border: 0px solid #272c30;
+}
 .home-wrapper h4.card-title {
     font-size: 1.2rem;
 }
@@ -21,7 +24,12 @@ body {
     color: #ffe600;
 }
 
-
+@media (min-width: 576px){
+    .form-inline .custom-select, .form-inline .input-group {
+        width: 80%;
+    }
+    
+}
 div {
     display: block;
 }
@@ -121,7 +129,6 @@ div {
 }
 .ic-color {
     color: #ffe600;
-    font-size: 1.5rem;
 }
 .navbar-imdb-clone {
     background-color: #ffe600;

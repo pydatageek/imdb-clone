@@ -5,9 +5,12 @@
 {% block title_info %}
   <small>
     {% if movie.imdb_rating %}
-      <span class="pl-1 pr-1 ic-bg-dark" title="{% trans 'IMDB Rating' %}">
-        <i class="fa fa-star"></i> {{ movie.imdb_rating }}/10
-      </span>
+      {% if movie.imdb_link %}
+        <a href="{{ movie.imdb_link}}" target="_blank">{% endif %}
+        <span class="pl-1 pr-1 ic-bg-dark" title="{% trans 'IMDB Rating' %}">
+          <i class="fa fa-star"></i> {{ movie.imdb_rating }}/10
+        </span>
+      {% if movie.imdb_link %}</a>{% endif %}
     {% endif %}
     {% if movie.pg_rating.code %}
       <span class="pr-1" title="{% trans 'PG Rating' %}">
@@ -16,7 +19,7 @@
         {{ object.duration_humanize }}</span> | 
       <span class="pl-1 pr-1" title="{% trans 'Movie Genres' %}">
         {% for genre in object.genres.all %}
-      <a href="{% url 'genre_detail' genre.slug %}" alt="{{ genre.name }}">
+      <a href="{% url 'genre-detail' genre.slug %}" alt="{{ genre.name }}">
         {{ genre.name }}</a>{% if not forloop.last %},{% endif %} 
         {% endfor %}
     </span>
@@ -38,7 +41,7 @@
             alt="{% trans 'no image' %}">
         {% endif %}
       </div>
-      <div class="col-md-9 embed-responsive">
+      <div class="col-md-9"> <!-- embed-responsive -->
         {% if object.trailer and object.trailer_video != 'no-video' %}
         <iframe width="100%" height="100%" 
           src="{{ object.trailer_video.0 }}" 
@@ -61,25 +64,33 @@
       </div>
     </figure>
     <p>
+      <strong>Producers: </strong>
+      {% for i in object.producers %}
+      <a href="{% url 'celeb-detail' i.crew.slug %}" alt="{{ i.crew.name }}">
+        {{ i.crew.name }}</a>{% if not forloop.last %},{% endif %} 
+      {% endfor %}
+    <br>
       <strong>Directors: </strong>
-      {% for i in object.directors.all %}
+      {% for i in object.directors %}
       <a href="{% url 'celeb-detail' i.crew.slug %}" alt="{{ i.crew.name }}">
         {{ i.crew.name }}</a>{% if not forloop.last %},{% endif %} 
       {% endfor %}
     <br>
       <strong>Writers: </strong>
-      {% for i in object.writers.all %}
+      {% for i in object.writers %}
       <a href="{% url 'celeb-detail' i.crew.slug %}" alt="{{ i.crew.name }}">
         {{ i.crew.name }}</a>{% if not forloop.last %},{% endif %} 
       {% endfor %}
     <br>
       <strong>Stars: </strong>
-      {% for i in object.casts.all|slice:':5' %}
+      {% for i in object.casts|slice:':5' %}
       <a href="{% url 'celeb-detail' i.crew.slug %}" alt="{{ i.crew.name }}">
         {{ i.crew.name }}</a>{% if not forloop.last %},{% endif %} 
       {% endfor %} | 
-      <a href="#cast">{% trans 'Full Cast & Crew List' %}</a> 
-      <i class="right fas fa-angle-double-right"></i>
+      <small>
+        <a href="#cast">{% trans 'Full Cast & Crew List' %}</a> 
+        <i class="right fas fa-angle-double-right"></i>
+       </small>
     </p>
   </div>
   <!-- /.card-header -->
@@ -107,9 +118,17 @@
     <table>
       <tbody>
         <!-- TODO: make this part DRY-->
-        {% for i in object.all_crews.all %}
+        {% for i in object.all_crews %}
         <tr>
-          <td>
+          <td>{% if i.crew.image %}
+            {% generateimage 'ic_list_thumbnail' source=i.crew.image -- alt=i.crew.name class='img-fluid w-80' %}
+            {% else %}
+            <img class="img-fluid w-80" 
+              src="{% static 'no-image-list-thumbnail.jpg' %}" 
+              alt="{% trans 'no image' %}">
+            {% endif %}
+          </td>
+          <td class="pl-2">
             <a href="{% url 'celeb-detail' i.crew.slug %}" 
               alt="{{ i.crew.name }}">{{ i.crew.name }}</a> 
             ...

@@ -18,17 +18,17 @@ class GenreModelTests(TestCase):
 
     def test_name_content(self):
         genre = Genre.objects.get(id=1)
-        expected_result = f'{genre.name}'
+        expected_result = genre.name
         self.assertEquals(expected_result, 'Custom Genre')
 
     def test_code_content(self):
         genre = Genre.objects.get(id=1)
-        expected_result = f'{genre.code}'
+        expected_result = genre.code
         self.assertEquals(expected_result, 'CGE')
 
     def test_content_content(self):
         genre = Genre.objects.get(id=1)
-        expected_result = f'{genre.content}'
+        expected_result = genre.content
         self.assertEquals(
             expected_result, 'This is a custom genre for testing.')
 
@@ -36,6 +36,9 @@ class GenreModelTests(TestCase):
         genre = Genre.objects.get(id=1)
         expected_result = genre.extra_chars_count
         self.assertEquals(expected_result, 3)
+
+    # def test_slug_content(self):
+    #     pass
 
 
 class MovieModelTests(TestCase):
@@ -65,12 +68,12 @@ class MovieModelTests(TestCase):
 
     def test_name_content(self):
         movie = Movie.objects.get(id=1)
-        expected_result = f'{movie.name}'
+        expected_result = movie.name
         self.assertEquals(expected_result, 'Test Movie')
 
     def test_original_name_content(self):
         movie = Movie.objects.get(id=1)
-        expected_result = f'{movie.original_name}'
+        expected_result = movie.original_name
         self.assertEquals(expected_result, 'Moviente Teste')
 
     def test_is_featured_content(self):
@@ -95,30 +98,33 @@ class MovieModelTests(TestCase):
 
     def test_content_content(self):
         movie = Movie.objects.get(id=1)
-        expected_result = f'{movie.content}'
+        expected_result = movie.content
         self.assertEquals(expected_result, 'Test Movie test content.')
 
     def test_content_source_content(self):
         movie = Movie.objects.get(id=1)
-        expected_result = f'{movie.content_source}'
+        expected_result = movie.content_source
         self.assertEquals(
             expected_result, 'https://github.com/pydatageek/imdb-clone')
 
     def test_trailer_content(self):
         movie = Movie.objects.get(id=1)
-        expected_result = f'{movie.trailer}'
+        expected_result = movie.trailer
         self.assertEquals(
             expected_result, 'https://www.youtube.com/watch?v=1NJO0jxBtMo')
 
     def test_trailer_info_content(self):
         movie = Movie.objects.get(id=1)
-        expected_result = f'{movie.trailer_info}'
+        expected_result = movie.trailer_info
         self.assertEquals(expected_result, 'full movie')
 
     def test_image_credit_content(self):
         movie = Movie.objects.get(id=1)
-        expected_result = f'{movie.image_credit}'
+        expected_result = movie.image_credit
         self.assertEquals(expected_result, 'imdb')
+
+    # def test_slug_content(self):
+    #     pass
 
 
 class PgRatingModelTests(TestCase):
@@ -134,20 +140,23 @@ class PgRatingModelTests(TestCase):
 
     def test_name_content(self):
         pg_rating = PgRating.objects.get(id=1)
-        expected_result = f'{pg_rating.name}'
+        expected_result = pg_rating.name
         self.assertEquals(expected_result, 'PG Rating for Test')
 
     def test_code_content(self):
         pg_rating = PgRating.objects.get(id=1)
-        expected_result = f'{pg_rating.code}'
+        expected_result = pg_rating.code
         self.assertEquals(expected_result, 'PGfT')
 
     def test_content_content(self):
         pg_rating = PgRating.objects.get(id=1)
-        expected_result = f'{pg_rating.content}'
+        expected_result = pg_rating.content
         self.assertEquals(expected_result, 'PG Rating test content')
 
     def test_extra_chars_count_content(self):
         pg_rating = PgRating.objects.get(id=1)
         expected_result = pg_rating.extra_chars_count
         self.assertEquals(expected_result, 7)
+
+    # def test_slug_content(self):
+    #     pass

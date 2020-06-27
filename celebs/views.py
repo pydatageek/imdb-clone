@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
@@ -10,9 +10,15 @@ from .helpers import get_random_celebs
 class CelebDetail(DetailView):
     model = Celebrity
 
+    def get_queryset(self):
+        qs = super().get_queryset().prefetch_related(
+            'moviecrews__movie', 'moviecrews__duty')
+        return qs
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['title'] = self.object.name
+        context['title_alt'] = _('Celebrity')
         context['random_celebs'] = get_random_celebs()
         context['random_movies'] = get_random_movies()
         return context
@@ -35,6 +41,7 @@ class DutyDetail(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['title'] = self.object.name
+        context['title_alt'] = _('Celebrity Duty')
         context['title_page_prefix'] = _('Celebrity Duty')
         context['celebs'] = Celebrity.objects.prefetch_related(
             'duties').filter(duties__pk=self.get_object().pk)

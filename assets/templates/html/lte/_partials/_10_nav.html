@@ -18,11 +18,11 @@
 
   <!-- SEARCH FORM -->
   <!--TODO: make searchable-->
-  <form class="form-inline ml-3 nav-search">
+  <form class="form-inline mx-auto nav-search" action="{% url 'search' %}">
     <div class="input-group">
       <input class="form-control form-control-navbar" type="search" 
-        placeholder="{% trans 'Search NOT working yet!' %}" 
-        aria-label="{% trans 'Search' %}">
+        placeholder="{% trans 'Search..' %}" 
+        aria-label="{% trans 'Search' %}" name="q">
       <div class="input-group-append">
         <button class="btn btn-navbar" type="submit">
           <i class="fas fa-search"></i>

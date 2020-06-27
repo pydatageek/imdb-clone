@@ -21,7 +21,7 @@
             alt="{% trans 'no image' %}">
         {% endif %}
       </div>
-      <div class="col-md-9 embed-responsive">
+      <div class="col-md-9"> <!-- embed-responsive -->
         {% if object.trailer and object.trailer_video != 'no-video' %}
         <iframe width="100%" height="100%" 
           src="{{ object.trailer_video.0 }}" 
@@ -47,14 +47,14 @@
     
     <div class="col col-6 small float-right text-right">
       {% if object.birthdate or object.birth_place %}
-      <strong>Birth Place / Birth Date: </strong>
-        {{ object.birth_place }} / 
-        <br>{{ object.birthdate }} ({{ object.age }} years old)
+      <strong>Birth Date / Birth Place: </strong>
+      {{ object.birthdate }} ({{ object.age }} years old) / 
+        <br>{{ object.birth_place }}
       {% endif %}
       {% if object.deathdate or object.death_place %}
-        <br><strong>Death Place / Death Date: </strong>
-        {{ object.death_place }} / 
-        <br>{{ object.deathdate }}
+        <br><strong>Death Date / Death Place: </strong>
+        {{ object.deathdate }} / 
+        <br>{{ object.death_place }}
       {% endif %}
     </div>
   </div>
@@ -82,11 +82,12 @@
     <h2>Filmography</h2>
     <table>
       <tbody>
-        {% for i in object.as_producer.all %}
+        {% for i in object.moviecrews.all %}
         <tr>
           <td>
-            <a href="{% url 'movie_detail' i.movie.slug %}" 
+            <a href="{% url 'movie-detail' i.movie.slug %}" 
               alt="{{ i.movie.name }}">{{ i.movie.name }}</a> 
+              <small>({{ i.movie.release_year }})</small>
             ...
             <span class="font-italic">{{ i.duty.name }}</span>
             {% if i.role %}
@@ -100,8 +101,9 @@
         {% for i in object.as_director.all %}
         <tr>
           <td>
-            <a href="{% url 'movie_detail' i.movie.slug %}" 
+            <a href="{% url 'movie-detail' i.movie.slug %}" 
               alt="{{ i.movie.name }}">{{ i.movie.name }}</a>  
+              <small>({{ i.movie.release_year }})</small>
             ...
             <span class="font-italic">{{ i.duty.name }}</span>
             {% if i.role %}
@@ -115,8 +117,9 @@
         {% for i in object.as_writer.all %}
         <tr>
           <td>
-            <a href="{% url 'movie_detail' i.movie.slug %}" 
+            <a href="{% url 'movie-detail' i.movie.slug %}" 
               alt="{{ i.movie.name }}">{{ i.movie.name }}</a> 
+              <small>({{ i.movie.release_year }})</small>
             ...
             <span class="font-italic">{{ i.duty.name }}</span>
             {% if i.role %}
@@ -127,11 +130,13 @@
           </td>
         </tr>
         {% endfor %}
+
         {% for i in object.as_cast.all %}
         <tr>
           <td>
-            <a href="{% url 'movie_detail' i.movie.slug %}" 
+            <a href="{% url 'movie-detail' i.movie.slug %}" 
               alt="{{ i.movie.name }}">{{ i.movie.name }}</a> 
+              <small>({{ i.movie.release_year }})</small>
             ...
             <span class="font-italic">{{ i.duty.name }}</span>
             {% if i.role %}

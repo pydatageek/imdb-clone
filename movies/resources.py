@@ -30,6 +30,7 @@ class MovieResource(resources.ModelResource):
 
 
 class MovieCrewResource(resources.ModelResource):
+    """TODO: code should be improved considering the performance"""
     duty = fields.Field(
         attribute='duty',
         column_name='duty',

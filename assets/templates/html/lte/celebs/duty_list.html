@@ -23,7 +23,7 @@
       <tbody>
         {% for item in object_list %}
         <tr>
-          <td><a href="{% url 'duty_detail' item.slug %}">{{ item.name }}</a></td>
+          <td><a href="{% url 'duty-detail' item.slug %}">{{ item.name }}</a></td>
           <td>{{ item.code }}</td>
           <td>{{ item.celebs_count }}</td>
         </tr>

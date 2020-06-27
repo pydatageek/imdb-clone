@@ -11,19 +11,31 @@ number_of_items = 5
 def no_objects_exists():
     """checks whether db table has any objects recorded.
     if there is no object, it will return an empty list []"""
-    if not Movie.objects.all().exists():
+    if not Movie.objects.exists():
         return []
 
 
 def get_movies_queryset():
-    """retrieves the objects' queryset ordered by '-added_at' (defined on model) 
-    which is sorted as latest added first."""
-    return Movie.objects.all()
+    """retrieves the objects' queryset."""
+    return Movie.objects.select_related('pg_rating'). \
+        prefetch_related('genres').only(
+            'slug', 'name', 'image', 'release_year', 'imdb_rating', 'duration',
+            'pg_rating')
 
 
 def get_movies_list():
     """some functions need a list rather than a queryset."""
     return list(get_movies_queryset())
+
+
+def get_movies_queryset_limited():
+    """retrieves the objects' queryset."""
+    return Movie.objects.only('slug', 'name', 'image')
+
+
+def get_movies_list_limited():
+    """some functions need a list rather than a queryset."""
+    return list(get_movies_queryset_limited())
 
 
 def get_latest_movies(num=number_of_items):
@@ -45,7 +57,7 @@ def get_featured_movies(num=number_of_items):
     featured = get_movies_queryset().filter(
         Q(is_featured=True) & (
             Q(trailer__isnull=False) | Q(image__isnull=False)))
-    if featured.exists():
+    if len(featured):
         featured = list(featured)  # make featured queryset a list
         shuffle(featured)  # make the list randomly ordered
         return featured[:num]
@@ -59,5 +71,15 @@ def get_random_movies(num=number_of_items):
     no_objects_exists()
 
     movies = get_movies_list()  # list in order to shuffle
+    shuffle(movies)  # make the list randomly ordered
+    return movies[:num]
+
+
+def get_random_movies_limited(num=number_of_items):
+    """retrieves 'num' number of random movies."""
+
+    no_objects_exists()
+
+    movies = get_movies_list_limited()  # list in order to shuffle
     shuffle(movies)  # make the list randomly ordered
     return movies[:num]

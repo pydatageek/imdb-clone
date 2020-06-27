@@ -7,7 +7,7 @@ from imagekit.processors import ResizeToFill
 class ListThumbnail(ImageSpec):
     processors = [ResizeToFill(45, 67)]
     format = 'JPEG'
-    options = {'quality': 60}
+    options = {'quality': 85}
 
 
 def cached_list_thumb(instance):
@@ -23,19 +23,19 @@ def cached_list_thumb(instance):
 class Thumbnail(ImageSpec):
     processors = [ResizeToFill(60, 100)]
     format = 'JPEG'
-    options = {'quality': 60}
+    options = {'quality': 85}
 
 
 class MiddlePoster(ImageSpec):
     processors = [ResizeToFill(112, 180)]
     format = 'JPEG'
-    options = {'quality': 80}
+    options = {'quality': 85}
 
 
 class Poster(ImageSpec):
     processors = [ResizeToFill(250, 400)]
     format = 'JPEG'
-    options = {'quality': 80}
+    options = {'quality': 85}
 
 
 class Featured(ImageSpec):

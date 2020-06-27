@@ -1,17 +1,21 @@
 """Project-wide base models inherited by other models"""
 
+from .helpers import random_chars
+from crum import get_current_user
+from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
+from django.utils import timezone
+from django.db import models
+from django.core.validators import MaxValueValidator
 from unidecode import unidecode
 
 from django.conf import settings
-from django.core.validators import MaxValueValidator
-from django.db import models
-from django.utils import timezone
-from django.utils.text import slugify
-from django.utils.translation import gettext_lazy as _
+"""
+# TODO: this part is for fast search with postgreSQL.search
 
-from crum import get_current_user
-
-from .helpers import random_chars
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
+"""
 
 
 class StampedModel(models.Model):
@@ -57,17 +61,29 @@ class StampedModel(models.Model):
 class NameSlugModel(models.Model):
     """name and automatically created slug fields"""
     name = models.CharField(
-        _('name'), max_length=245, unique=True)
+        _('name'), max_length=245, unique=True, db_index=True)
     slug = models.SlugField(
-        _('slug'), max_length=255, blank=True, unique=True)
+        _('slug'), max_length=255, blank=True, unique=True, db_index=True)
     extra_chars_count = models.PositiveSmallIntegerField(
         _('extra characters count'), default=5,
         validators=[MaxValueValidator(9, message=_('max value is 9'))],
         help_text=_('''The number of extra random characters be suffixed 
         to slug if needed. default is 0 and it means no extra chars.'''))
 
+    """
+    # TODO: this part is for fast search with postgreSQL.search
+    name_vector = SearchVectorField(null=True)
+    """
+
     class Meta:
         abstract = True
+
+        """
+        # TODO: this part is for fast search with postgreSQL.search
+        indexes = [
+            GinIndex(fields=['name_vector'])
+        ]
+        """
 
     def __str__(self):
         return self.name

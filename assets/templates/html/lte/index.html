@@ -6,14 +6,15 @@
   <div class="col-lg-9">
     <div class="card box">
       <div class="card-body">
+        {% if featured_movies %}
         <div id="carouselExampleIndicators" class="carousel slide" 
             data-ride="carousel" data-interval="3000">
           <div class="carousel-inner img-gradient">
-          {% for movie in featured_movies %}
+          {% for movie in featured_movies|slice:':5' %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
               {% if movie.image %}
                 {% generateimage 'ic_featured' source=movie.image -- alt=movie.name class='img-fluid' width='100%' %}
-                <a href="{% url 'movie_detail' movie.slug %}">
+                <a href="{% url 'movie-detail' movie.slug %}">
                   <div class="absolute-img">
                     {% generateimage 'ic_middle_poster' source=movie.image -- alt=movie.name %}
                   </div>
@@ -22,14 +23,14 @@
                 <img class="img-fluid" width="100%" 
                   src="{% static 'no-video.jpg' %}" 
                   alt="{% trans 'no video' %}">
-                <a href="{% url 'movie_detail' movie.slug %}">
+                <a href="{% url 'movie-detail' movie.slug %}">
                   <div class="absolute-img">
                     <img src="{% static 'no-image-middle-poster.jpg' %}" 
                       alt="{% trans 'no image' %}">
                   </div>
                 </a>
               {% endif %}
-              <a href="{% url 'movie_detail' movie.slug %}">
+              <a href="{% url 'movie-detail' movie.slug %}">
                 <div class="featured-title">
                   <h2>{{ movie.name }} 
                     <small><i>({{ movie.release_year }})</i></small>
@@ -63,6 +64,7 @@
             <span class="sr-only">{% trans 'Next' %}</span>
           </a>
         </div>
+        {% endif %}
       </div>
       <!-- /.card-body -->
     </div>
@@ -72,27 +74,27 @@
   <div class="col-lg-3">
     <div class="card right-side">
       <div class="card-header">
-        <h3 class="card-title ic-color">
+        <h3 class="h3 ic-color">
           {% trans 'Celebrities' %}</h3>
       </div>
         {% for celeb in featured_celebs|slice:':3' %}
         <div class="card-body">
-          <div class="col-sm-3 float-left">
+          <div class="col-4 float-left">
             <a href="{% url 'celeb-detail' celeb.slug %}">
             {% if celeb.image %}
-              {% generateimage 'ic_list_thumbnail' source=celeb.image -- alt=celeb.name class='w-80' %}
+              {% generateimage 'ic_thumbnail' source=celeb.image -- alt=celeb.name class='img-fluid w-100' %}
             {% else %}
             <img class="img-fluid w-100"
-              src="{% static 'no-image-list-thumbnail.jpg' %}" 
+              src="{% static 'no-image-thumbnail.jpg' %}" 
               alt="{% trans 'no image' %}">
             {% endif %}
             </a>
           </div>
-          <div class="col-sm-9 float-left">
-            <h5>
+          <div class="col-8 float-left">
+            <h4>
               <a href="{% url 'celeb-detail' celeb.slug %}">
-                {{ celeb.name }}</a></h5>
-            <p class="small">{{ celeb.moviecrews.first.movie }}</p>
+                {{ celeb.name }}</a></h4>
+            <p>{{ celeb.moviecrews.first.movie }}</p>
           </div>
         </div>
         {% endfor %}
@@ -110,6 +112,8 @@
 </div>
 <section id="multi-item-carousel">
   <section class="section-preview">
+    {% if featured_movies %}
+    <h2 class="ic-color">{% trans 'Featured movies' %}</h2>
     <div id="multi-item" 
         class="carousel slide carousel-multi-item" data-ride="carousel">
 
@@ -131,7 +135,7 @@
       <!--/.Controls-->
 
       <div class="carousel-inner" role="listbox">
-      {% for movie in latest_movies %}
+      {% for movie in featured_movies %}
         {% if forloop.first %}
         <div class="carousel-item active">
         {% endif %}
@@ -141,7 +145,7 @@
         {% endif %}
           <div class="col-md-2 float-left">
             <div class="card mb-2 bg-dark">
-              <a href="{% url 'movie_detail' movie.slug %}">
+              <a href="{% url 'movie-detail' movie.slug %}">
                 {% if movie.image %}
                   {% generateimage 'ic_poster' source=movie.image -- alt=movie.name class='card-img-top' width='80%' %}
                 {% else %}
@@ -165,6 +169,7 @@
       {% endfor %}
       </div>
     </div>
+    {% endif %}
   </section>
 </section>
 

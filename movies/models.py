@@ -6,6 +6,7 @@ from django.core.validators import (
     ValidationError, MaxValueValidator, MinValueValidator)
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from ckeditor.fields import RichTextField
@@ -37,10 +38,9 @@ class Genre(NameSlugStampedModel):
     class Meta:
         verbose_name = _('genre')
         verbose_name_plural = _('genres')
-        ordering = ('name',)
 
     def get_absolute_url(self):
-        return reverse('genre_detail', args=[self.slug])
+        return reverse('genre-detail', args=[self.slug])
 
 
 class PgRating(NameSlugStampedModel):
@@ -58,7 +58,6 @@ class PgRating(NameSlugStampedModel):
     class Meta:
         verbose_name = _('PG Rating')
         verbose_name_plural = _('PG Ratings')
-        ordering = ('pk',)
 
     def __str__(self):
         return f'{self.code} ({self.name})'
@@ -86,6 +85,8 @@ class Movie(NameSlugStampedModel):
     imdb_rating = models.FloatField(
         _('IMDB rating'), default=0, blank=True,
         help_text=_('e.g. 6.8'))
+    imdb_link = models.URLField(
+        _('IMDB URL'), default='', blank=True)
     # TODO
     # rottentomatoes_rating = models.FloatField(
     #     _('RottenTomatoes rating'), default=0, blank=True,
@@ -121,15 +122,15 @@ class Movie(NameSlugStampedModel):
         'celebs.Celebrity', through='MovieCrew', blank=True,
         related_name='movies', verbose_name=_('crews'))
 
-    @property
+    @cached_property
     def age(self):
         return get_age(self.release_year)
 
-    @property
+    @cached_property
     def trailer_video(self):
         return video_code(self.trailer)
 
-    @property
+    @cached_property
     def duration_humanize(self):
         return get_duration_humanize(self.duration)
 
@@ -156,10 +157,9 @@ class Movie(NameSlugStampedModel):
     class Meta:
         verbose_name = _('movie')
         verbose_name_plural = _('movies')
-        ordering = ('-added_at', '-release_year', 'name')
 
     def get_absolute_url(self):
-        return reverse('movie_detail', args=[self.slug])
+        return reverse('movie-detail', args=[self.slug])
 
     def _get_crew(self, duty_code='A'):
         """TODO: reduce queries"""
@@ -214,7 +214,6 @@ class MovieCrew(models.Model):
         verbose_name = _('movie crew')
         verbose_name_plural = _('movie crews')
         unique_together = ('movie', 'list_order')
-        ordering = ('-movie__release_year', 'movie', 'list_order')
 
     def clean(self, *args, **kwargs):
         if not self.duty in self.crew.duties.all():

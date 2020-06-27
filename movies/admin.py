@@ -26,6 +26,7 @@ class GenreAdmin(BaseAdmin, ImportExportModelAdmin):
     save_on_top = True
     search_fields = ('name',)
 
+    ordering = ('name',)
     list_display = ('name', 'code', 'movies_count', 'slug')
 
     def get_queryset(self, request):
@@ -46,6 +47,7 @@ class PgRatingAdmin(BaseAdmin, ImportExportModelAdmin):
     save_on_top = True
     search_fields = ('name', 'code')
 
+    ordering = ('pk',)
     list_display = ('name', 'code', 'movies_count', 'slug')
 
     def get_queryset(self, request):
@@ -67,6 +69,7 @@ class MovieAdmin(BaseAdmin, ImportExportModelAdmin):
     search_fields = ('name',)
     list_filter = ('pg_rating', 'imdb_rating')
 
+    ordering = ('-added_at', '-release_year', 'name')
     list_display = ('admin_thumbnail', 'name', 'release_year', 'age',
                     'is_featured', 'imdb_rating', 'duration', 'pg_rating')
     list_display_links = ('name',)
@@ -85,7 +88,7 @@ class MovieAdmin(BaseAdmin, ImportExportModelAdmin):
                 'content', 'content_source',
                 'trailer', 'trailer_info',
                 ('admin_thumbnail', 'image'), 'image_credit',
-                'genres',
+                'genres', 'imdb_link',
             )
         }),
         (_('Meta info'), {
@@ -106,4 +109,5 @@ class MovieAdmin(BaseAdmin, ImportExportModelAdmin):
 class MovieCrew(ImportExportModelAdmin):
     resource_class = MovieCrewResource
 
+    ordering = ('-movie__release_year', 'movie', 'list_order')
     list_display = ('crew', 'duty', 'role', 'movie')

@@ -1,10 +1,22 @@
 """More tests are written continuously!"""
 from datetime import date
+import random
+import string
+
+from unidecode import unidecode
 
 from django.test import TestCase
 from django.utils import timezone
 
 from celebs.models import Celebrity, Duty
+
+
+def random_chars(counts):
+    return ''.join(['{}'.format(
+        random.choice(string.ascii_lowercase + string.digits))
+        for _ in range(counts)])
+
+# self.slug = slugify(unidecode(self.name))
 
 
 class CelebrityModelTests(TestCase):
@@ -36,24 +48,26 @@ class CelebrityModelTests(TestCase):
             # duties=''
         )
 
+        # random_chars = random_chars(self.extra_chars_count)
+
     def test_name_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.name}'
+        expected_result = celeb.name
         self.assertEquals(expected_result, 'Adam Smith')
 
     def test_first_name_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.first_name}'
+        expected_result = celeb.first_name
         self.assertEquals(expected_result, 'Adam')
 
     def test_last_name_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.last_name}'
+        expected_result = celeb.last_name
         self.assertEquals(expected_result, 'Smith')
 
     def test_nick_name_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.nick_name}'
+        expected_result = celeb.nick_name
         self.assertEquals(expected_result, 'AS')
 
     def test_is_featured_content(self):
@@ -68,7 +82,7 @@ class CelebrityModelTests(TestCase):
 
     def test_birth_place_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.birth_place}'
+        expected_result = celeb.birth_place
         self.assertEquals(expected_result, 'Kirkcaldy, Fife, Scotland')
 
     def test_deathdate_content(self):
@@ -78,39 +92,46 @@ class CelebrityModelTests(TestCase):
 
     def test_death_place_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.death_place}'
+        expected_result = celeb.death_place
         self.assertEquals(expected_result, 'Edinburgh, Scotland')
 
     def test_content_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.content}'
+        expected_result = celeb.content
         self.assertEquals(
             expected_result,
             'Adam Smith, a Scottish economist, philosopher, and author is known as The Father of Economics.')
 
     def test_content_source_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.content_source}'
+        expected_result = celeb.content_source
         self.assertEquals(
             expected_result,
             'https://en.wikipedia.org/wiki/Adam_Smith')
 
     def test_trailer_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.trailer}'
+        expected_result = celeb.trailer
         self.assertEquals(
             expected_result,
             'https://www.youtube.com/watch?v=1NJO0jxBtMo')
 
     def test_trailer_info_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.trailer_info}'
+        expected_result = celeb.trailer_info
         self.assertEquals(expected_result, '')
 
     def test_image_credit_content(self):
         celeb = Celebrity.objects.get(id=1)
-        expected_result = f'{celeb.image_credit}'
+        expected_result = celeb.image_credit
         self.assertEquals(expected_result, 'wikimedia.org')
+
+    # def test_slug_content(self):
+    #     celeb = Celebrity.objects.get(id=1)
+    #     expected_result = celeb.slug
+    #     self.assertEquals(
+    #         expected_result,
+    #         f'{celeb.first_name.lower()}-{celeb.last_name.lower()}-{random_chars(5)}')
 
 
 class DutyModelTests(TestCase):
@@ -124,15 +145,18 @@ class DutyModelTests(TestCase):
 
     def test_name_content(self):
         duty = Duty.objects.get(id=1)
-        expected_result = f'{duty.name}'
+        expected_result = duty.name
         self.assertEquals(expected_result, 'Custom Duty')
 
     def test_code_content(self):
         duty = Duty.objects.get(id=1)
-        expected_result = f'{duty.code}'
+        expected_result = duty.code
         self.assertEquals(expected_result, 'C')
 
     def test_extra_chars_count_content(self):
         duty = Duty.objects.get(id=1)
         expected_result = duty.extra_chars_count
         self.assertEquals(expected_result, 5)
+
+    # def test_slug_content(self):
+    #     pass

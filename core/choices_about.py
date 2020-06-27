@@ -1,4 +1,4 @@
-"""Project's constants"""
+"""Project's constants. NOT used yet!"""
 
 SITE_NAME = ''
 SITE_SLOGAN = ''

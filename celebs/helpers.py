@@ -1,8 +1,9 @@
 import random
 from random import shuffle
 
-from django.db.models import Q, Max
+from django.db.models import Q, Max, Prefetch
 
+from movies.models import MovieCrew
 from .models import Celebrity
 
 number_of_items = 5
@@ -11,14 +12,16 @@ number_of_items = 5
 def no_objects_exists():
     """checks whether db table has any objects recorded.
     if there is no object, it will return an empty list []"""
-    if not Celebrity.objects.all().exists():
+    if not Celebrity.objects.exists():
         return []
 
 
 def get_celebs_queryset():
     """retrieves the objects' queryset ordered by '-added_at' (defined on model) 
     which is sorted as latest added first."""
-    return Celebrity.objects.prefetch_related('moviecrews')
+    return Celebrity.objects.prefetch_related(
+        Prefetch('moviecrews',
+                 queryset=MovieCrew.objects.all())).only('slug', 'name', 'image')
 
 
 def get_celebs_list():
@@ -44,7 +47,7 @@ def get_featured_celebs(num=number_of_items):
     featured = get_celebs_queryset().filter(
         Q(is_featured=True) & (
             Q(trailer__isnull=False) | Q(image__isnull=False)))
-    if featured.exists():
+    if len(featured):
         featured = list(featured)  # make featured queryset a list
         shuffle(featured)  # make the list randomly ordered
         return featured[:num]

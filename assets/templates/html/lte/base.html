@@ -3,9 +3,7 @@
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 <html lang="{{ LANGUAGE_CODE|default:'en-us' }}" 
       {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
-
   <head>
-
     {% block meta %}
       <meta http-equiv="content-language" 
             content="{{ LANGUAGE_CODE|default:'en-us' }}" />
@@ -50,7 +48,6 @@
         {% block title_suffix %}{{ site.name }}{% endblock %}
       </title>
     {% endblock %}
-  
   </head>
 
   {% load i18n %}
@@ -101,12 +98,15 @@
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="{% url 'index' %}" class="text-midnight">
+                      <a href="{% url 'index' %}" 
+                        class="text-midnight" title="{% trans 'Index' %}">
                         {% trans 'Home' %}</a>
                     </li>
                     {% block crumbs %}
                       {% if title %} 
-                        <li class="breadcrumb-item active">{{ title }}</li>
+                        <li class="breadcrumb-item active" 
+                            title="{{ title_alt }}">{{ title }}
+                        </li>
                       {% endif %}
                     {% endblock %}
                   </ol>
@@ -121,27 +121,29 @@
               <div class="col-lg-3">
                 <div class="card right-side">
                   <div class="card-header">
-                    <h3 class="card-title ic-color">
-                      {% trans 'Celebrities' %}</h3>
+                    <h3 class="h3 ic-color">
+                      {% trans 'Celebrities' %}
+                    </h3>
                   </div>
-                    {% for celeb in random_celebs|slice:':4' %}
+                    {% for celeb in random_celebs %}
                     <div class="card-body">
-                      <div class="col-sm-3 float-left">
+                      <div class="col-4 float-left">
                         <a href="{% url 'celeb-detail' celeb.slug %}">
                         {% if celeb.image %}
-                          {% generateimage 'ic_list_thumbnail' source=celeb.image -- alt=celeb.name class='w-80' %}
+                          {% generateimage 'ic_thumbnail' source=celeb.image -- alt=celeb.name class='img-fluid w-100' %}
                         {% else %}
                         <img class="img-fluid w-100"
-                          src="{% static 'no-image-list-thumbnail.jpg' %}" 
+                          src="{% static 'no-image-thumbnail.jpg' %}" 
                           alt="{% trans 'no image' %}">
                         {% endif %}
                         </a>
                       </div>
-                      <div class="col-sm-9 float-left">
-                        <h5>
+                      <div class="col-8 float-left">
+                        <h4>
                           <a href="{% url 'celeb-detail' celeb.slug %}">
-                            {{ celeb.name }}</a></h5>
-                        <p class="small">{{ celeb.moviecrews.first.movie }}</p>
+                            {{ celeb.name }}</a></h4>
+                        <p class="text-white">
+                          {{ celeb.moviecrews.movie }}</p>
                       </div>
                     </div>
                     {% endfor %}
@@ -156,33 +158,32 @@
                 <!-- /.card -->
                 <div class="card right-side">
                   <div class="card-header">
-                    <h3 class="card-title ic-color">
+                    <h3 class="h3 ic-color">
                       {% trans 'Movies' %}</h3>
                   </div>
-                    {% for movie in random_movies|slice:':4' %}
+                    {% for movie in random_movies %}
                     <div class="card-body">
-                      <div class="col-sm-3 float-left">
-                        <a href="{% url 'movie_detail' movie.slug %}">
+                      <div class="col-4 float-left">
+                        <a href="{% url 'movie-detail' movie.slug %}">
                         {% if movie.image %}
-                          {% generateimage 'ic_list_thumbnail' source=movie.image -- alt=movie.name class='w-80' %}
+                        {% generateimage 'ic_thumbnail' source=movie.image -- alt=movie.name class='img-fluid w-100' %}
                         {% else %}
                         <img class="img-fluid w-100"
-                          src="{% static 'no-image-list-thumbnail.jpg' %}" 
+                          src="{% static 'no-image-thumbnail.jpg' %}" 
                           alt="{% trans 'no image' %}">
                         {% endif %}
                         </a>
                       </div>
-                      <div class="col-sm-9 float-left">
-                        <h5>
-                          <a href="{% url 'movie_detail' movie.slug %}">
-                            {{ movie.name }}</a></h5>
-                        <p class="small">{{ movie.moviecrews.first.celeb }}</p>
+                      <div class="col-8 float-left">
+                        <h4>
+                          <a href="{% url 'movie-detail' movie.slug %}">
+                            {{ movie.name }}</a></h4>
                       </div>
                     </div>
                     {% endfor %}
                     <!-- /.card-body -->
                   <div class="card-footer">
-                    <a href="{% url 'movie_list' %}">
+                    <a href="{% url 'movie-list' %}">
                       {% trans 'Browse Movies' %}
                       <i class="right fas fa-angle-right"></i></a>
                   </div>
