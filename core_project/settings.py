@@ -102,7 +102,7 @@ DATABASES = {
     # },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'imdb40',
+        'NAME': 'imdb51',
         'USER': 'imdb',
         'PASSWORD': 'imdb678--',
         'HOST': 'localhost',

@@ -99,7 +99,7 @@ class Movie(NameSlugStampedModel):
             MaxValueValidator(10.0, message=_(
                 'max. value cannot be more then 10'))],
         help_text=_('e.g. 6.8'))
-    imdb_raters_count = models.PositiveSmallIntegerField(  # TODO: if rating 0, this should be 0 also
+    imdb_raters_count = models.PositiveIntegerField(  # TODO: if rating 0, this should be 0 also
         _('IMDB raters count'), default=0, blank=True)
     imdb_id = models.CharField(
         _('IMDB Id'), max_length=15, default='', blank=True,
