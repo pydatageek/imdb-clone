@@ -77,7 +77,7 @@
         <h3 class="h3 ic-color">
           {% trans 'Celebrities' %}</h3>
       </div>
-        {% for celeb in featured_celebs|slice:':3' %}
+        {% for celeb in featured_celebs %}
         <div class="card-body">
           <div class="col-4 float-left">
             <a href="{% url 'celeb-detail' celeb.slug %}">

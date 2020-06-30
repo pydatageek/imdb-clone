@@ -1,6 +1,4 @@
-"""Models related with Movies
-e.g. Movie, MovieCrew, Genre, PgRating
-"""
+"""Models related with Movies e.g. Movie, MovieCrew, Genre, PgRating"""
 
 from django.core.validators import (
     ValidationError, MaxValueValidator, MinValueValidator)
@@ -17,7 +15,7 @@ from core.models import NameSlugStampedModel
 
 
 def movie_directory_path(instance, filename):
-    """the computed upload folder for movie images"""
+    """The computed upload folder for movie images"""
     file_and_ext = get_extension(filename)
     return f'movies/{instance.id}/{file_and_ext[0].lower()} \
         -{random_chars(5)}{file_and_ext[1]}'
@@ -32,7 +30,8 @@ class Genre(NameSlugStampedModel):
 
     extra_chars_count = models.PositiveSmallIntegerField(
         _('extra characters count'), default=0, editable=False,
-        help_text=_('there is no need for extra chars for slug of this model \
+        help_text=_(
+            'there is no need for extra chars for slug of this model \
             and if no need for it to be editable also.'))
 
     class Meta:
@@ -52,7 +51,8 @@ class PgRating(NameSlugStampedModel):
 
     extra_chars_count = models.PositiveSmallIntegerField(
         _('extra characters count'), default=0, editable=False,
-        help_text=_('there is no need for extra chars for slug of this model \
+        help_text=_(
+            'there is no need for extra chars for slug of this model \
             and if no need for it to be editable also.'))
 
     class Meta:
@@ -77,32 +77,59 @@ class Movie(NameSlugStampedModel):
     is_featured = models.BooleanField(
         _('featured'), default=False)
 
-    release_year = models.PositiveSmallIntegerField(
-        _('release year'),
-        validators=[MinValueValidator(1100), MaxValueValidator(2100)])
+    # TODO: retrieve release_year from release_date
+    release_date = models.DateField(
+        _('release date'), blank=True, null=True)
+
+    # release_date = models.PositiveSmallIntegerField(
+    #     _('release year'),
+    #     validators=[MinValueValidator(1100), MaxValueValidator(2100)])
+
     duration = models.PositiveSmallIntegerField(
         _('duration'), default=0, blank=True, help_text=_('in minutes'))
+
+    # country
+    # language
+
     imdb_rating = models.FloatField(
         _('IMDB rating'), default=0, blank=True,
+        validators=[
+            MinValueValidator(0.0, message=_(
+                'min. value cannot be negative')),
+            MaxValueValidator(10.0, message=_(
+                'max. value cannot be more then 10'))],
         help_text=_('e.g. 6.8'))
-    imdb_link = models.URLField(
-        _('IMDB URL'), default='', blank=True)
-    # TODO
+    imdb_raters_count = models.PositiveSmallIntegerField(  # TODO: if rating 0, this should be 0 also
+        _('IMDB raters count'), default=0, blank=True)
+    imdb_id = models.CharField(
+        _('IMDB Id'), max_length=15, default='', blank=True,
+        db_index=True)  # db_index is True for massive imports
+
+    # TODO:
     # rottentomatoes_rating = models.FloatField(
     #     _('RottenTomatoes rating'), default=0, blank=True,
     #     help_text=_('e.g. 6.8'))
 
+    intro = models.TextField(
+        _('intro'), default='', blank=True, max_length=500)
     content = RichTextField(
         _('content'), default='', blank=True)
-    # TODO: MayBe: content_source be transformed into an MTM or Text field
+    # TODO: MayBe: content_source be transformed into an MTM
+    # or Text field
     content_source = models.URLField(
         _('content source'), default='', blank=True)
-    # TODO: MayBe: an MTM for more trailers and BE for more video sources
+    # TODO: MayBe: an MTM for more trailers and BE for more
+    # video sources
     trailer = models.URLField(
         _('trailer'), default='', blank=True,
         help_text=_('trailer url (ONLY for youtube videos yet)'))
     trailer_info = models.CharField(
         _('trailer info'), max_length=250, default='', blank=True)
+
+    country = models.CharField(
+        _('country'), max_length=100, default='', blank=True)
+    language = models.CharField(
+        _('language'), max_length=100, default='', blank=True)
 
     image = models.ImageField(
         _('image'), upload_to=movie_directory_path,
@@ -124,7 +151,7 @@ class Movie(NameSlugStampedModel):
 
     @cached_property
     def age(self):
-        return get_age(self.release_year)
+        return get_age(self.release_date)
 
     @cached_property
     def trailer_video(self):
@@ -134,23 +161,27 @@ class Movie(NameSlugStampedModel):
     def duration_humanize(self):
         return get_duration_humanize(self.duration)
 
-    @property
+    @cached_property
+    def release_year(self):
+        return self.release_date.year
+
+    @ property
     def producers(self):
         return self._get_crew('P')
 
-    @property
+    @ property
     def directors(self):
         return self._get_crew('D')
 
-    @property
+    @ property
     def writers(self):
         return self._get_crew('W')
 
-    @property
+    @ property
     def casts(self):
         return self._get_crew('C')
 
-    @property
+    @ property
     def all_crews(self):
         return self._get_crew('A')
 
@@ -160,6 +191,11 @@ class Movie(NameSlugStampedModel):
 
     def get_absolute_url(self):
         return reverse('movie-detail', args=[self.slug])
+
+    def clean(self, *args, **kwargs):
+        if self.imdb_raters_count == 0 and self.imdb_rating != 0.0:
+            raise ValidationError(
+                _('With 0 raters, rating cannot be different than 0'))
 
     def _get_crew(self, duty_code='A'):
         """TODO: reduce queries"""
@@ -200,14 +236,16 @@ class MovieCrew(models.Model):
 
     role = models.CharField(
         _('role'), max_length=75, default='', blank=True,
-        help_text=_('e.g. short story, screenplay for writer or voice for cast'))
+        help_text=_(
+            'e.g. short story, screenplay for writer or voice for cast'))
     screen_name = models.CharField(
         _('screen name'), max_length=75, default='', blank=True,
         help_text=_("crew's name on movie"))
 
     list_order = models.PositiveSmallIntegerField(
         _('list order'), validators=[MinValueValidator(1)],
-        help_text=_('order of appearance on movie. normal appearance should \
+        help_text=_(
+            'order of appearance on movie. normal appearance should \
             be producer(s) > director(s) > writer(s) > cast(s)'))
 
     class Meta:
@@ -218,7 +256,8 @@ class MovieCrew(models.Model):
     def clean(self, *args, **kwargs):
         if not self.duty in self.crew.duties.all():
             raise ValidationError(
-                _('crew duty and selected duty should match'), code='invalid')
+                _('crew duty and selected duty should match'),
+                code='invalid')
         super().clean(*args, **kwargs)
 
     def save(self, *args, **kwargs):

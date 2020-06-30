@@ -3,12 +3,14 @@ from django.urls import include, path
 
 from rest_framework import routers
 
-from .views import GenreViewSet, MovieViewSet, PgRatingViewsSet
+from .views import GenreApiViewSet, MovieApiViewSet, PgRatingApiViewSet
+
+app_name = 'movies'
 
 router = routers.DefaultRouter()
-router.register('genre', GenreViewSet)
-router.register('pg-rating', PgRatingViewsSet)
-router.register('', MovieViewSet)
+router.register('genre', GenreApiViewSet)
+router.register('pg-rating', PgRatingApiViewSet)
+router.register('', MovieApiViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

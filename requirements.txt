@@ -1,6 +1,7 @@
 Django==3.0.7
 django-ckeditor==5.9.0
 django-crum==0.7.6
+django-heroku==0.3.1
 django-imagekit==4.0.2
 django-import-export==2.2.0
 djangorestframework==3.11.0

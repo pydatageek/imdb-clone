@@ -1,4 +1,4 @@
-"""helper module to process images TO several dimensions"""
+"""Helper module to process images TO several dimensions"""
 from imagekit import ImageSpec, register
 from imagekit.cachefiles import ImageCacheFile
 from imagekit.processors import ResizeToFill

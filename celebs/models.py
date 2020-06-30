@@ -1,7 +1,4 @@
-"""
-models related with Celebrities
-e.g. Celeb, Duty
-"""
+"""Models related with Celebrities e.g. Celebrity, Duty"""
 
 from datetime import date
 
@@ -16,7 +13,8 @@ from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
 
 from core.models import NameSlugStampedModel
-from core.helpers import get_age, get_extension, random_chars, video_code
+from core.helpers import (
+    get_age, get_extension, random_chars, video_code)
 """
 # TODO: this part is for fast search with postgreSQL.search
 
@@ -26,6 +24,7 @@ from django.contrib.postgres.search import SearchVectorField
 
 
 def celeb_directory_path(instance, filename):
+    """The computed upload folder for celebrity images"""
     file_and_ext = get_extension(filename)
     return f'celebs/{instance.id}/{file_and_ext[0].lower()} \
         -{random_chars(5)}{file_and_ext[1]}'
@@ -34,20 +33,16 @@ def celeb_directory_path(instance, filename):
 class Duty(NameSlugStampedModel):
     """duty of celebs"""
     code = models.CharField(
-        _('code'), max_length=1, db_index=True)
+        _('code'), max_length=2, db_index=True)
 
     extra_chars_count = models.PositiveSmallIntegerField(
         _('extra characters count'), default=0, editable=False,
-        help_text=_('there is no need for extra chars for slug of this model \
-            and if no need for it to be editable also.'))
-
-    class Meta:
-        abstract = True
+        help_text=_('there is no need for extra chars for slug of \
+        this model and if no need for it to be editable also.'))
 
     class Meta:
         verbose_name = _('duty')
         verbose_name_plural = _('duties')
-        ordering = ('code',)
 
     def get_absolute_url(self):
         return reverse('duty-detail', args=[self.slug])
@@ -55,11 +50,15 @@ class Duty(NameSlugStampedModel):
 
 class Celebrity(NameSlugStampedModel):
     """Celebrity model
-    TODO: birthdate <= today, deathdate <= today and birthdate < deathdate checks"""
+    TODO: birthdate <= today, deathdate <= today and 
+    birthdate < deathdate checks
+    """
     # name field is overriden
     name = models.CharField(
         _('full name'), max_length=245, unique=False, db_index=True,
         blank=True, editable=False, help_text=_('computed full name'))
+    birth_name = models.CharField(
+        _('birth name'), max_length=245, blank=True)
 
     first_name = models.CharField(
         _('first name'), max_length=75)
@@ -71,9 +70,11 @@ class Celebrity(NameSlugStampedModel):
     is_featured = models.BooleanField(
         _('featured'), default=False)
 
-    imdb_link = models.URLField(
-        _('IMDB URL'), default='', blank=True)
-    # TODO
+    imdb_id = models.CharField(
+        _('IMDB Id'), max_length=15, default='', blank=True,
+        db_index=True)  # db_index is True for massive imports
+
+    # TODO:
     # starmeter_rating = models.FloatField(
     #     _('StarMeter rating'), default=0, blank=True,
     #     help_text=_('e.g. 6.8'))
@@ -83,18 +84,21 @@ class Celebrity(NameSlugStampedModel):
     # TODO: MayBe: birth_place be country, state, city, town
     birth_place = models.CharField(
         _('birth place'), max_length=200, default='', blank=True)
-
     deathdate = models.DateField(
         _('death date'), blank=True, null=True)
     # TODO: MayBe: death_place be country, state, city, town
     death_place = models.CharField(
         _('death place'), max_length=200, default='', blank=True)
+    death_reason = models.CharField(
+        _('death reason'), max_length=255, default='', blank=True)
 
     content = RichTextField(
         _('biography'), default='', blank=True)
-    # TODO: MayBe: content_source be transformed into an MTM or Text field
+    # TODO: MayBe: content_source be transformed into an MTM
+    # or Text field
     content_source = models.URLField(
         _('content source'), default='', blank=True)
+
     trailer = models.URLField(
         _('trailer'), default='', blank=True,
         help_text=_('trailer url (ONLY for youtube videos yet)'))
@@ -146,7 +150,6 @@ class Celebrity(NameSlugStampedModel):
     class Meta:
         verbose_name = _('celebrity')
         verbose_name_plural = _('celebrities')
-        # ordering = ('last_name', 'first_name')
 
         """
         # TODO: this part is for fast search with postgreSQL.search

@@ -69,26 +69,29 @@ class MovieAdmin(BaseAdmin, ImportExportModelAdmin):
     search_fields = ('name',)
     list_filter = ('pg_rating', 'imdb_rating')
 
-    ordering = ('-added_at', '-release_year', 'name')
-    list_display = ('admin_thumbnail', 'name', 'release_year', 'age',
-                    'is_featured', 'imdb_rating', 'duration', 'pg_rating')
+    ordering = ('-added_at', '-release_date', 'name')
+    list_display = (
+        'admin_thumbnail', 'name', 'release_date', 'age',
+        'is_featured', 'imdb_rating', 'duration', 'pg_rating')
     list_display_links = ('name',)
     list_editable = ('is_featured',)
 
     admin_thumbnail = AdminThumbnail(image_field=cached_list_thumb)
 
-    readonly_fields = ('slug', 'extra_chars_count', 'admin_thumbnail',
-                       'added_by', 'added_at', 'updated_by', 'updated_at')
+    readonly_fields = (
+        'slug', 'extra_chars_count', 'admin_thumbnail',
+        'added_by', 'added_at', 'updated_by', 'updated_at')
     autocomplete_fields = ('genres', 'pg_rating')
     fieldsets = (
         (_('Info'), {
             'fields': (
                 ('name', 'slug'), 'original_name',
-                ('release_year', 'duration'), 'imdb_rating',
+                ('release_date', 'duration'),
+                ('imdb_id', 'imdb_rating', 'imdb_raters_count'),
                 'content', 'content_source',
                 'trailer', 'trailer_info',
                 ('admin_thumbnail', 'image'), 'image_credit',
-                'genres', 'imdb_link',
+                'genres',
             )
         }),
         (_('Meta info'), {
@@ -102,12 +105,12 @@ class MovieAdmin(BaseAdmin, ImportExportModelAdmin):
 
     def age(self, obj):
         return obj.age
-    age.admin_order_field = 'release_year'
+    age.admin_order_field = 'release_date'
 
 
 @admin.register(MovieCrew)
 class MovieCrew(ImportExportModelAdmin):
     resource_class = MovieCrewResource
 
-    ordering = ('-movie__release_year', 'movie', 'list_order')
+    ordering = ('-movie__release_date', 'movie', 'list_order')
     list_display = ('crew', 'duty', 'role', 'movie')

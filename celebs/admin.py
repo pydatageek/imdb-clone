@@ -20,6 +20,7 @@ class DutyAdmin(BaseAdmin, ImportExportModelAdmin):
     save_on_top = True
     search_fields = ('name',)
 
+    ordering = ('code',)
     list_display = ('name', 'code', 'celebs_count', 'slug')
 
     def get_queryset(self, request):
@@ -43,25 +44,28 @@ class CelebrityAdmin(BaseAdmin, ImportExportModelAdmin):
 
     ordering = ('last_name', 'first_name')
     list_display = (
-        'admin_thumbnail', 'first_name', 'last_name', 'is_featured', 'slug',
+        'admin_thumbnail', 'first_name', 'last_name',
+        'is_featured', 'slug',
         'age', 'updated_at')
     list_display_links = ('first_name', 'last_name')
     list_editable = ('is_featured',)
 
     admin_thumbnail = AdminThumbnail(image_field=cached_list_thumb)
 
-    readonly_fields = ('name', 'slug', 'extra_chars_count', 'admin_thumbnail',
-                       'added_by', 'added_at', 'updated_by', 'updated_at')
+    readonly_fields = (
+        'name', 'slug', 'extra_chars_count', 'admin_thumbnail',
+        'added_by', 'added_at', 'updated_by', 'updated_at')
     fieldsets = (
         (_('Info'), {
             'fields': (
                 ('name', 'slug'), ('first_name', 'last_name'),
                 ('nick_name', 'is_featured'),
-                ('birthdate', 'birth_place'), ('deathdate', 'death_place'),
+                ('birthdate', 'birth_place'),
+                ('deathdate', 'death_place'),
                 'content', 'content_source',
                 'trailer', 'trailer_info',
                 ('admin_thumbnail', 'image'), 'image_credit',
-                'duties', 'imdb_link',
+                'duties', 'imdb_id'
             )
         }),
         (_('Meta info'), {

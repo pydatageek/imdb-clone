@@ -17,8 +17,8 @@ urlpatterns = [
     # web api
     path('api/auth/', include('rest_framework.urls')),
     path('api/v1/', include([
-        path('celeb/', include('celebs.api.urls')),
-        path('movie/', include('movies.api.urls')),
+        path('celeb/', include('celebs.api.urls', namespace='celebs')),
+        path('movie/', include('movies.api.urls', namespace='movies')),
         path('account/', include('users.api.urls'))
     ])),
 

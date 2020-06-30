@@ -22,7 +22,8 @@ def get_age(birth_date, death_date=None):
     if birth_date:
         if isinstance(birth_date, (date, datetime)):
             age_computed = today.year - birth_date.year - (
-                (today.month, today.day) < (birth_date.month, birth_date.day))
+                (today.month, today.day) < (
+                    birth_date.month, birth_date.day))
             return age_computed
         elif isinstance(birth_date, (int,)):
             age_computed = int(today.year) - birth_date
@@ -31,19 +32,19 @@ def get_age(birth_date, death_date=None):
 
 
 def get_duration_humanize(duration):
-    """returns the duration of a movie in hours and minutes"""
+    """Returns the duration of a movie in hours and minutes"""
     hours = duration // 60
     minutes = duration % 60
     return f'{hours}h {minutes}min'
 
 
 def get_extension(filename):
-    """returns the extension of a file"""
+    """Returns the extension of a file."""
     return os.path.splitext(filename)
 
 
 def random_chars(counts):
-    """generates 'counts' number random chars consisting of letters 
+    """Generates 'counts' number random chars consisting of letters 
     and numbers.
     TODO: a higher performance way?
     """
@@ -53,7 +54,7 @@ def random_chars(counts):
 
 
 def video_code(url):
-    """it returns video specific code from url to be used in apps easily
+    """It returns video specific code from url to be used in apps easily
     e.g. for a youtube video it is: 695y8rdHsA4
     TODO: make the code more robust
     """

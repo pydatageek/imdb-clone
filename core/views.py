@@ -29,7 +29,7 @@ class Home(TemplateView):
         # context['random_movies'] = get_random_movies()
 
         # celebrities context
-        context['featured_celebs'] = get_featured_celebs(8)
+        context['featured_celebs'] = get_featured_celebs(3)
         # context['latest_celebs'] = get_latest_celebs(13)
         # context['random_celebs'] = get_random_celebs()
 
@@ -58,11 +58,13 @@ class Search(ListView):
         context['movies_title'] = _('Movies')
         context['movies'] = Movie.objects.filter(name__icontains=query)
         context['celebs_title'] = _('Celebrities')
-        context['celebs'] = Celebrity.objects.filter(name__icontains=query)
+        context['celebs'] = Celebrity.objects.filter(
+            name__icontains=query)
 
         context['duties'] = Duty.objects.filter(name__icontains=query)
         context['genres'] = Genre.objects.filter(name__icontains=query)
-        context['pg_ratings'] = PgRating.objects.filter(name__icontains=query)
+        context['pg_ratings'] = PgRating.objects.filter(
+            name__icontains=query)
 
         """
         # TODO: this part is for fast search with postgreSQL.search
@@ -75,7 +77,7 @@ class Search(ListView):
                 rank__gt=0.0).order_by('-rank')
         """
 
-        context['random_movies'] = get_random_movies()
-        context['random_celebs'] = get_random_celebs()
+        context['random_movies'] = get_random_movies(3)
+        context['random_celebs'] = get_random_celebs(3)
 
         return context

@@ -130,9 +130,9 @@
                       <div class="col-4 float-left">
                         <a href="{% url 'celeb-detail' celeb.slug %}">
                         {% if celeb.image %}
-                          {% generateimage 'ic_thumbnail' source=celeb.image -- alt=celeb.name class='img-fluid w-100' %}
+                          {% generateimage 'ic_thumbnail' source=celeb.image -- alt=celeb.name class='img-fluid w-90' %}
                         {% else %}
-                        <img class="img-fluid w-100"
+                        <img class="img-fluid w-90"
                           src="{% static 'no-image-thumbnail.jpg' %}" 
                           alt="{% trans 'no image' %}">
                         {% endif %}
@@ -166,9 +166,9 @@
                       <div class="col-4 float-left">
                         <a href="{% url 'movie-detail' movie.slug %}">
                         {% if movie.image %}
-                        {% generateimage 'ic_thumbnail' source=movie.image -- alt=movie.name class='img-fluid w-100' %}
+                        {% generateimage 'ic_thumbnail' source=movie.image -- alt=movie.name class='img-fluid w-90' %}
                         {% else %}
-                        <img class="img-fluid w-100"
+                        <img class="img-fluid w-90"
                           src="{% static 'no-image-thumbnail.jpg' %}" 
                           alt="{% trans 'no image' %}">
                         {% endif %}

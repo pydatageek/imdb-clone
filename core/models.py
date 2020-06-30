@@ -44,7 +44,9 @@ class StampedModel(models.Model):
 
     def save(self, *args, **kwargs):
         """added_by and updated_by fields are filled automatically
-        by retrieving the current user. via crum.get_current_user"""
+        by retrieving the current user. via crum.get_current_user
+        TODO: remove crum
+        """
         user = get_current_user()
         if user and not user.pk:
             user = None
@@ -90,7 +92,8 @@ class NameSlugModel(models.Model):
 
     def save(self, *args, **kwargs):
         """slug is created once at the creation of object, 
-        unidecode converts the non-english letters to english ones."""
+        unidecode converts the non-english letters to english ones.
+        """
         if not self.slug:
             self.slug = slugify(unidecode(self.name))
             count = self.extra_chars_count
@@ -101,8 +104,9 @@ class NameSlugModel(models.Model):
 
 
 class NameSlugStampedModel(StampedModel, NameSlugModel):
-    """a comprehensive abstract model for items which need
-    name, slug fields and also user/time stamps on addition/modification"""
+    """A comprehensive abstract model for items which need
+    name, slug fields and also user/time stamps on addition/modification
+    """
     class Meta:
         abstract = True
 

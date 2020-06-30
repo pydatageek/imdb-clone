@@ -9,50 +9,49 @@ number_of_items = 5
 
 
 def no_objects_exists():
-    """checks whether db table has any objects recorded.
-    if there is no object, it will return an empty list []"""
+    """Checks whether db table has any objects recorded.
+    If there is no object, it will return an empty list []
+    """
     if not Movie.objects.exists():
         return []
 
 
 def get_movies_queryset():
-    """retrieves the objects' queryset."""
-    return Movie.objects.select_related('pg_rating'). \
-        prefetch_related('genres').only(
-            'slug', 'name', 'image', 'release_year', 'imdb_rating', 'duration',
-            'pg_rating')
+    """Retrieves the objects' queryset."""
+    return Movie.objects.select_related(
+        'pg_rating').prefetch_related('genres').only(
+            'slug', 'name', 'image', 'release_date', 'imdb_rating',
+            'duration', 'pg_rating')
 
 
 def get_movies_list():
-    """some functions need a list rather than a queryset."""
+    """Some functions need a list rather than a queryset."""
     return list(get_movies_queryset())
 
 
 def get_movies_queryset_limited():
-    """retrieves the objects' queryset."""
+    """Retrieves the objects' queryset."""
     return Movie.objects.only('slug', 'name', 'image')
 
 
 def get_movies_list_limited():
-    """some functions need a list rather than a queryset."""
+    """Some functions need a list rather than a queryset."""
     return list(get_movies_queryset_limited())
 
 
 def get_latest_movies(num=number_of_items):
-    """retrieves latest added movies from db if there is any 
-    (because default order on model is '-added_at')"""
-
-    no_objects_exists()
+    """Retrieves latest added movies from db if there is any."""
+    # no_objects_exists()
 
     return get_movies_list()[:num]
 
 
 def get_featured_movies(num=number_of_items):
-    """retrieves featured movies from db if there is any.
-    is_featured is a field in the model. also the featured item should have 
-    either trailer or image"""
-
-    no_objects_exists()
+    """Retrieves featured movies from db if there is any.
+    is_featured is a field in the model. also the featured item should 
+    have either trailer or image
+    """
+    # no_objects_exists()
 
     featured = get_movies_queryset().filter(
         Q(is_featured=True) & (
@@ -66,9 +65,8 @@ def get_featured_movies(num=number_of_items):
 
 
 def get_random_movies(num=number_of_items):
-    """retrieves 'num' number of random movies."""
-
-    no_objects_exists()
+    """Retrieves 'num' number of random movies."""
+    # no_objects_exists()
 
     movies = get_movies_list()  # list in order to shuffle
     shuffle(movies)  # make the list randomly ordered
@@ -76,9 +74,8 @@ def get_random_movies(num=number_of_items):
 
 
 def get_random_movies_limited(num=number_of_items):
-    """retrieves 'num' number of random movies."""
-
-    no_objects_exists()
+    """Retrieves 'num' number of random movies."""
+    # no_objects_exists()
 
     movies = get_movies_list_limited()  # list in order to shuffle
     shuffle(movies)  # make the list randomly ordered

@@ -111,7 +111,8 @@ class MovieModelTests(TestCase):
         movie = Movie.objects.get(id=1)
         expected_result = movie.trailer
         self.assertEquals(
-            expected_result, 'https://www.youtube.com/watch?v=1NJO0jxBtMo')
+            expected_result,
+            'https://www.youtube.com/watch?v=1NJO0jxBtMo')
 
     def test_trailer_info_content(self):
         movie = Movie.objects.get(id=1)
