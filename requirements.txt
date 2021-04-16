@@ -12,7 +12,7 @@ Unidecode==1.1.1
 # django-heroku==0.3.1
 
 # needed for debugging purpose when debug False
-django-debug-toolbar==2.2
+django-debug-toolbar==2.2.1
 
 # needed for postgreSQL
 psycopg2-binary==2.8.5
