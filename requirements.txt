@@ -5,7 +5,7 @@ django-heroku==0.3.1
 django-imagekit==4.0.2
 django-import-export==2.2.0
 djangorestframework==3.11.0
-Pillow==7.1.2
+Pillow==9.0.1
 Unidecode==1.1.1
 
 # needed for heroku
